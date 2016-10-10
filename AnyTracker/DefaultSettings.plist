@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NoContent</key>
+	<true/>
+	<key>NumberSeparator</key>
+	<true/>
+	<key>DateFormatLong</key>
+	<true/>
+	<key>AddNewListTop</key>
+	<false/>
+	<key>AddNewItemTop</key>
+	<false/>
+</dict>
+</plist>
