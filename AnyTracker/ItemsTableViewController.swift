@@ -40,12 +40,6 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-        
         tableView.tableFooterView = UIView(frame: CGRect.zero)
         
         tableView.estimatedRowHeight = 90
@@ -197,9 +191,11 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
     }
 
     fileprivate func deleteItem(withIndexPath indexPath: IndexPath) {
+        let index = (indexPath as NSIndexPath).row
+        
         do {
-            let _ = Items.deleteItemFile(withID: list!.items[(indexPath as NSIndexPath).row])
-            try list!.removeItem(atIndex: (indexPath as NSIndexPath).row)
+            let _ = Items.deleteItemFile(withID: list!.items[index])
+            try list!.removeItem(atIndex: index)
         }  catch let error as Status {
             let alert = error.createErrorAlert()
             present(alert, animated: true, completion: nil)
@@ -217,16 +213,18 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
     }
     
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let itemIndex = (indexPath as NSIndexPath).row
+        
         let edit = UITableViewRowAction(style: .normal, title: "Edit") { action, index in
             let vcNav = self.storyboard!.instantiateViewController(withIdentifier: "NewItemNavigation") as! UINavigationController
             let vc = vcNav.childViewControllers[0] as! NewItemViewController
             vc.delegateEdit = self
-            self.editItemIndex = (indexPath as NSIndexPath).row
+            self.editItemIndex = itemIndex
             self.itemUpdated = false
             vc.longDateFormat = self.app?.dateFormatLong ?? true
             
             do {
-                let item = try Items.loadItem(withID: self.list?.items[(indexPath as NSIndexPath).row] ?? "")
+                let item = try Items.loadItem(withID: self.list?.items[itemIndex] ?? "")
                 vc.editItem = item
             } catch let error as Status {
                 let alert = error.createErrorAlert()
@@ -247,7 +245,7 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
         let delete = UITableViewRowAction(style: .destructive, title: "Delete") { action, index in
             var item: Item!
             do {
-                item = try Items.loadItem(withID: self.list?.items[(indexPath as NSIndexPath).row] ?? "")
+                item = try Items.loadItem(withID: self.list?.items[itemIndex] ?? "")
             } catch let error as Status {
                 let alert = error.createErrorAlert()
                 self.present(alert, animated: true, completion: nil)
@@ -308,6 +306,8 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
         guard let identifier = segue.identifier else {
             return
         }
+        let itemIndex = (tableView.indexPathForSelectedRow as NSIndexPath?)?.row ?? -1
+        let itemIDIndex = (tableView.indexPathForSelectedRow as NSIndexPath?)?.row ?? 0
         
         if identifier == "toNewItem" {
             let vc = segue.destination.childViewControllers[0] as! NewItemViewController
@@ -319,9 +319,9 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
             let vc = segue.destination as! ItemSumViewController
             vc.numberSeparator = app?.numberSeparator ?? true
             vc.itemChangeDelegate = self
-            refreshItemIndex = (tableView.indexPathForSelectedRow as NSIndexPath?)?.row ?? -1
+            refreshItemIndex = itemIndex
             do {
-                let item = try Items.loadItem(withID: getItemID(fromIndex: (tableView.indexPathForSelectedRow as NSIndexPath?)?.row ?? 0)) as! ItemSum
+                let item = try Items.loadItem(withID: getItemID(fromIndex: itemIDIndex)) as! ItemSum
                 vc.item = item
             } catch let error as Status {
                 let alert = error.createErrorAlert()
@@ -335,9 +335,9 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
             let vc = segue.destination as! ItemCounterViewController
             vc.numberSeparator = app?.numberSeparator ?? true
             vc.itemChangeDelegate = self
-            refreshItemIndex = (tableView.indexPathForSelectedRow as NSIndexPath?)?.row ?? -1
+            refreshItemIndex = itemIndex
             do {
-                let item = try Items.loadItem(withID: getItemID(fromIndex: (tableView.indexPathForSelectedRow as NSIndexPath?)?.row ?? 0)) as! ItemCounter
+                let item = try Items.loadItem(withID: getItemID(fromIndex: itemIDIndex)) as! ItemCounter
                 vc.item = item
             } catch let error as Status {
                 let alert = error.createErrorAlert()
@@ -351,9 +351,9 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
             let vc = segue.destination as! ItemJournalViewController
             vc.itemChangeDelegate = self
             vc.longDateFormat = app?.dateFormatLong ?? true
-            refreshItemIndex = (tableView.indexPathForSelectedRow as NSIndexPath?)?.row ?? -1
+            refreshItemIndex = itemIndex
             do {
-                let item = try Items.loadItem(withID: getItemID(fromIndex: (tableView.indexPathForSelectedRow as NSIndexPath?)?.row ?? 0)) as! ItemJournal
+                let item = try Items.loadItem(withID: getItemID(fromIndex: itemIDIndex)) as! ItemJournal
                 vc.item = item
             } catch let error as Status {
                 let alert = error.createErrorAlert()

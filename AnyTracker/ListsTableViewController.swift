@@ -34,12 +34,6 @@ class ListsTableViewController: UITableViewController, NewListDelegate, ItemsDel
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-        
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-        
         tableView.tableFooterView = UIView(frame: CGRect.zero)
         
         guard let app = app else {
@@ -166,7 +160,8 @@ class ListsTableViewController: UITableViewController, NewListDelegate, ItemsDel
         if (indexPath as NSIndexPath).row == 0 {
             cell.initCellWithName(App.Constants.Text.listAll, andItems: app?.lists?.cache?.numItemsAll ?? 0)
         } else {
-            cell.initCellWithName(app?.lists?.cache?.lists[(indexPath as NSIndexPath).row - 1].name ?? "<Name>", andItems: app?.lists?.cache?.lists[(indexPath as NSIndexPath).row - 1].numItems ?? 0)
+            let index = (indexPath as NSIndexPath).row - 1
+            cell.initCellWithName(app?.lists?.cache?.lists[index].name ?? "<Name>", andItems: app?.lists?.cache?.lists[index].numItems ?? 0)
         }
         
         return cell
@@ -215,10 +210,12 @@ class ListsTableViewController: UITableViewController, NewListDelegate, ItemsDel
     }
     
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let listIndex = (indexPath as NSIndexPath).row - 1
+        
         let edit = UITableViewRowAction(style: .normal, title: "Edit") { action, index in
             let vc = self.storyboard!.instantiateViewController(withIdentifier: "NewList") as! NewListViewController
             vc.delegate = self
-            vc.listName = self.app?.lists!.cache?.lists[(indexPath as NSIndexPath).row - 1].name ?? ""
+            vc.listName = self.app?.lists!.cache?.lists[listIndex].name ?? ""
             self.editListIndex = (indexPath as NSIndexPath).row - 1
             self.present(vc, animated: true, completion: nil)
             
@@ -231,10 +228,10 @@ class ListsTableViewController: UITableViewController, NewListDelegate, ItemsDel
                 return
             }
             
-            if app.lists!.cache?.lists[(indexPath as NSIndexPath).row - 1].numItems ?? 0 > 0 {
+            if app.lists!.cache?.lists[listIndex].numItems ?? 0 > 0 {
                 let alert = UIAlertController(title: "", message: "Are you sure you want to delete the list and its items?", preferredStyle: UIAlertControllerStyle.alert)
                 let yesAction = UIAlertAction(title: "Yes", style: UIAlertActionStyle.destructive, handler: { (action: UIAlertAction!) in
-                    self.deleteList(atIndex: (indexPath as NSIndexPath).row - 1, withIndexPath: indexPath)
+                    self.deleteList(atIndex: listIndex, withIndexPath: indexPath)
                 })
                 let noAction = UIAlertAction(title: "No", style: UIAlertActionStyle.cancel, handler: { (action: UIAlertAction!) in
                     self.tableView.setEditing(false, animated: true)
@@ -245,7 +242,7 @@ class ListsTableViewController: UITableViewController, NewListDelegate, ItemsDel
                 return
             }
             
-            self.deleteList(atIndex: (indexPath as NSIndexPath).row - 1, withIndexPath: indexPath)
+            self.deleteList(atIndex: listIndex, withIndexPath: indexPath)
         }
         
         return [delete, edit]
@@ -300,9 +297,10 @@ class ListsTableViewController: UITableViewController, NewListDelegate, ItemsDel
             vc.injectApp(app)
             if let row = (tableView.indexPathForSelectedRow as NSIndexPath?)?.row {
                 if row > 0 {
-                    vc.listName = app.lists!.listsData[row - 1]
+                    let realRow = row - 1
+                    vc.listName = app.lists!.listsData[realRow]
                     vc.delegate = self
-                    selectedListIndex = row - 1
+                    selectedListIndex = realRow
                     currentListNumItems = app.lists!.getListNumItems(atIndex: selectedListIndex!)
                 }
                 else {

@@ -100,6 +100,7 @@ class ItemJournalCell: UITableViewCell, UITextFieldDelegate, UITextViewDelegate 
         valueTextField.text = dateString
     }
 
+    // MARK: - Actions
     @IBAction func valueDateEditing(_ sender: UITextField) {
         let datePickerView: UIDatePicker = UIDatePicker()
         datePickerView.backgroundColor = UIColor.white
