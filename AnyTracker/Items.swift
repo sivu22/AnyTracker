@@ -25,7 +25,7 @@ extension ItemOps {
         var fileName: String = ""
         let currentTime = Utils.currentTime()
         while i < 10 {
-            fileName = App.Constants.File.item + String(typeIndex) + String(i) + currentTime + App.Constants.File.ext;
+            fileName = Constants.File.item + String(typeIndex) + String(i) + currentTime + Constants.File.ext;
             if !Utils.fileExists(atPath: fileName) {
                 break
             }

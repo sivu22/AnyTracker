@@ -15,6 +15,6 @@ class ListCell: UITableViewCell {
     
     func initCellWithName(_ name: String, andItems items: Int) {
         nameLabel.text = name
-        itemsLabel.text = String(items) + App.Constants.Text.listItems
+        itemsLabel.text = String(items) + Constants.Text.listItems
     }
 }

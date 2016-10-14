@@ -9,6 +9,44 @@
 import UIKit
 import Foundation
 
+struct Constants {
+    struct Key {
+        static let noContent = "NoContent"
+        static let numberSeparator = "NumberSeparator"
+        static let dateFormatLong = "DateFormatLong"
+        static let addNewListTop = "AddNewListTop"
+        static let addNewItemTop = "AddNewItemTop"
+    }
+    
+    struct Text {
+        static let listAll = "ALL"
+        static let listItems = " Items"
+    }
+    
+    struct File {
+        static let ext = ".json"
+        static let lists = "lists.json"
+        static let list = "list"
+        static let item = "item"
+    }
+    
+    struct Limits {
+        static let itemsPerList = 128
+    }
+    
+    struct Colors {
+        static let ItemSum = UIColor(red: 0, green: 122, blue: 255)
+        static let ItemCounter = UIColor(red: 85, green: 205, blue: 0)
+        static let ItemJournal = UIColor(red: 255, green: 132, blue: 0)
+    }
+    
+    struct Animations {
+        static let keyboardDuration = 0.3
+        static let keyboardCurve = UIViewAnimationCurve.easeOut
+        static let keyboardDistanceToControl: CGFloat = 10
+    }
+}
+
 enum Status: String, Error {
     case ErrorDefault = "Unknown error"
     case ErrorInputString = "Bad input found!"
@@ -49,44 +87,6 @@ enum Status: String, Error {
 }
 
 class App {
-    struct Constants {
-        struct Key {
-            static let noContent = "NoContent"
-            static let numberSeparator = "NumberSeparator"
-            static let dateFormatLong = "DateFormatLong"
-            static let addNewListTop = "AddNewListTop"
-            static let addNewItemTop = "AddNewItemTop"
-        }
-        
-        struct Text {
-            static let listAll = "ALL"
-            static let listItems = " Items"
-        }
-        
-        struct File {
-            static let ext = ".json"
-            static let lists = "lists.json"
-            static let list = "list"
-            static let item = "item"
-        }
-        
-        struct Limits {
-            static let itemsPerList = 128
-        }
-        
-        struct Colors {
-            static let ItemSum = UIColor(red: 0, green: 122, blue: 255)
-            static let ItemCounter = UIColor(red: 85, green: 205, blue: 0)
-            static let ItemJournal = UIColor(red: 255, green: 132, blue: 0)
-        }
-        
-        struct Animations {
-            static let keyboardDuration = 0.3
-            static let keyboardCurve = UIViewAnimationCurve.easeOut
-            static let keyboardDistanceToControl: CGFloat = 10
-        }
-    }
-    
     
     static fileprivate(set) var version: String = {
         let appPlist = Bundle.main.infoDictionary as [String: AnyObject]!

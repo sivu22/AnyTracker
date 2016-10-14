@@ -51,14 +51,14 @@ class Lists {
             throw Status.ErrorJSONSerialize
         }
         
-        if !Utils.createFile(withName: App.Constants.File.lists, withContent: JSONString, overwriteExisting: true) {
+        if !Utils.createFile(withName: Constants.File.lists, withContent: JSONString, overwriteExisting: true) {
             Utils.debugLog("Failed to save lists to file")
             throw Status.ErrorListsFileSave
         }
     }
     
     static func loadListsFromFile() throws -> Lists {
-        let content = Utils.readFile(withName: App.Constants.File.lists)
+        let content = Utils.readFile(withName: Constants.File.lists)
         guard content != nil else {
             Utils.debugLog("Failed to load lists from file")
             throw Status.ErrorListsFileLoad

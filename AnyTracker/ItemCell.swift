@@ -49,13 +49,13 @@ class ItemCell: UITableViewCell {
         }
         
         if let sumItem = item as? ItemSum {
-            typeLabel.backgroundColor = App.Constants.Colors.ItemSum
+            typeLabel.backgroundColor = Constants.Colors.ItemSum
             valueLabel.text = sumItem.sum.asString(withSeparator: separator)
         } else if let counterItem = item as? ItemCounter {
-            typeLabel.backgroundColor = App.Constants.Colors.ItemCounter
+            typeLabel.backgroundColor = Constants.Colors.ItemCounter
             valueLabel.text = counterItem.counter.asString(withSeparator: separator)
         } else if let journalItem = item as? ItemJournal {
-            typeLabel.backgroundColor = App.Constants.Colors.ItemJournal
+            typeLabel.backgroundColor = Constants.Colors.ItemJournal
             valueLabel.text = journalItem.entries.count == 0 ? "No entries" : journalItem.entries.count == 1 ? "1 entry" : "\(journalItem.entries.count) entries"
         }
     }

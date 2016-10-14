@@ -26,8 +26,8 @@ class ItemSumViewController: UIViewController, UITableViewDelegate, UITableViewD
     var shownKeyboardHeight: CGFloat = 0
     
     var viewOffset: CGFloat = 0
-    var keyboardAnimationDuration: Double = App.Constants.Animations.keyboardDuration
-    var keyboardAnimationCurve: UIViewAnimationCurve = App.Constants.Animations.keyboardCurve
+    var keyboardAnimationDuration: Double = Constants.Animations.keyboardDuration
+    var keyboardAnimationCurve: UIViewAnimationCurve = Constants.Animations.keyboardCurve
     
     
     override func viewDidLoad() {
@@ -103,11 +103,11 @@ class ItemSumViewController: UIViewController, UITableViewDelegate, UITableViewD
             return
         }
         
-        keyboardAnimationDuration = (notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? App.Constants.Animations.keyboardDuration
-        keyboardAnimationCurve = UIViewAnimationCurve(rawValue: (notification.userInfo?[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber)?.intValue ?? App.Constants.Animations.keyboardCurve.rawValue)!
+        keyboardAnimationDuration = (notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? Constants.Animations.keyboardDuration
+        keyboardAnimationCurve = UIViewAnimationCurve(rawValue: (notification.userInfo?[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber)?.intValue ?? Constants.Animations.keyboardCurve.rawValue)!
         
         let activeControlRect: CGRect = activeView!.frame
-        var lastVisiblePoint: CGPoint = CGPoint(x: activeControlRect.origin.x, y: activeControlRect.origin.y + activeControlRect.height + App.Constants.Animations.keyboardDistanceToControl)
+        var lastVisiblePoint: CGPoint = CGPoint(x: activeControlRect.origin.x, y: activeControlRect.origin.y + activeControlRect.height + Constants.Animations.keyboardDistanceToControl)
         if activeView != nameTextField && activeView != valueTextField {
             lastVisiblePoint = activeView!.convert(lastVisiblePoint, to: view)
         }

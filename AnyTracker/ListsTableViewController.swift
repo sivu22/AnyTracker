@@ -49,7 +49,7 @@ class ListsTableViewController: UITableViewController, NewListDelegate, ItemsDel
             }
             
             if app.lists == nil {
-                Utils.debugLog("Failed to load lists from file \(App.Constants.File.lists)")
+                Utils.debugLog("Failed to load lists from file \(Constants.File.lists)")
             }
         }
         
@@ -158,7 +158,7 @@ class ListsTableViewController: UITableViewController, NewListDelegate, ItemsDel
         let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell", for: indexPath) as! ListCell
     
         if (indexPath as NSIndexPath).row == 0 {
-            cell.initCellWithName(App.Constants.Text.listAll, andItems: app?.lists?.cache?.numItemsAll ?? 0)
+            cell.initCellWithName(Constants.Text.listAll, andItems: app?.lists?.cache?.numItemsAll ?? 0)
         } else {
             let index = (indexPath as NSIndexPath).row - 1
             cell.initCellWithName(app?.lists?.cache?.lists[index].name ?? "<Name>", andItems: app?.lists?.cache?.lists[index].numItems ?? 0)

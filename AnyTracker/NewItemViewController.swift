@@ -59,8 +59,8 @@ class NewItemViewController: UIViewController, UITextFieldDelegate {
     }()
     
     var viewOffset: CGFloat = 0
-    var keyboardAnimationDuration: Double = App.Constants.Animations.keyboardDuration
-    var keyboardAnimationCurve: UIViewAnimationCurve = App.Constants.Animations.keyboardCurve
+    var keyboardAnimationDuration: Double = Constants.Animations.keyboardDuration
+    var keyboardAnimationCurve: UIViewAnimationCurve = Constants.Animations.keyboardCurve
 
     
     override func viewDidLoad() {
@@ -77,9 +77,9 @@ class NewItemViewController: UIViewController, UITextFieldDelegate {
         
         // Color the segmented control
         let views = typeControl.subviews
-        views[ItemType.numberOfItems() - 1 - ItemType.Sum.getTypeIndex()].tintColor = App.Constants.Colors.ItemSum
-        views[ItemType.numberOfItems() - 1 - ItemType.Counter.getTypeIndex()].tintColor = App.Constants.Colors.ItemCounter
-        views[ItemType.numberOfItems() - 1 - ItemType.Journal.getTypeIndex()].tintColor = App.Constants.Colors.ItemJournal
+        views[ItemType.numberOfItems() - 1 - ItemType.Sum.getTypeIndex()].tintColor = Constants.Colors.ItemSum
+        views[ItemType.numberOfItems() - 1 - ItemType.Counter.getTypeIndex()].tintColor = Constants.Colors.ItemCounter
+        views[ItemType.numberOfItems() - 1 - ItemType.Journal.getTypeIndex()].tintColor = Constants.Colors.ItemJournal
         
         if let item = editItem {
             createBarButton.isEnabled = true
@@ -164,11 +164,11 @@ class NewItemViewController: UIViewController, UITextFieldDelegate {
             return
         }
         
-        keyboardAnimationDuration = (notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? App.Constants.Animations.keyboardDuration
-        keyboardAnimationCurve = UIViewAnimationCurve(rawValue: (notification.userInfo?[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber)?.intValue ?? App.Constants.Animations.keyboardCurve.rawValue)!
+        keyboardAnimationDuration = (notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? Constants.Animations.keyboardDuration
+        keyboardAnimationCurve = UIViewAnimationCurve(rawValue: (notification.userInfo?[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber)?.intValue ?? Constants.Animations.keyboardCurve.rawValue)!
         
         let activeTextFieldRect: CGRect = activeView!.frame
-        var lastVisiblePoint: CGPoint = CGPoint(x: activeTextFieldRect.origin.x, y: activeTextFieldRect.origin.y + activeTextFieldRect.height + App.Constants.Animations.keyboardDistanceToControl)
+        var lastVisiblePoint: CGPoint = CGPoint(x: activeTextFieldRect.origin.x, y: activeTextFieldRect.origin.y + activeTextFieldRect.height + Constants.Animations.keyboardDistanceToControl)
         if activeView == startDateTextField || activeView == endDateTextField {
             lastVisiblePoint = CGPoint(x: lastVisiblePoint.x + dateRangeView.frame.origin.x, y: lastVisiblePoint.y + dateRangeView.frame.origin.y)
         }

@@ -43,7 +43,7 @@ class List: Version, NameAndID {
         var fileName: String = ""
         let currentTime = Utils.currentTime()
         while i < 10 {
-            fileName = App.Constants.File.list + String(i) + currentTime + App.Constants.File.ext;
+            fileName = Constants.File.list + String(i) + currentTime + Constants.File.ext;
             if !Utils.fileExists(atPath: fileName) {
                 break
             }
