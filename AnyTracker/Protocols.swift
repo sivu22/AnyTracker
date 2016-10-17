@@ -18,17 +18,17 @@ protocol NameAndID {
 protocol Version: class {
     var version: String { get set }
     
-    func setVersion(_ newVersion: String) -> Bool
+    func setVersion(_ oldVersion: String) -> Bool
     func compareWithVersion(_ cmpVersion: String) -> Int
 }
 
 extension Version {
-    func setVersion(_ newVersion: String) -> Bool {
-        if newVersion < version {
+    func setVersion(_ oldVersion: String) -> Bool {
+        if oldVersion > version {
             return false
         }
         
-        version = newVersion
+        version = oldVersion
         return true
     }
     
