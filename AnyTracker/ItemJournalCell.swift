@@ -54,7 +54,7 @@ class ItemJournalCell: UITableViewCell, UITextFieldDelegate, UITextViewDelegate 
             nameTextView.resignFirstResponder()
         }
         
-        if nameTextView.text == item.entries[entryIndex].name {
+        if nameTextView.text == item.entries[entryIndex].name && valueDate == item.entries[entryIndex].value {
             return
         }
         
