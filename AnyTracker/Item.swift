@@ -46,6 +46,7 @@ protocol Item: class, Version, NameAndID, ItemInit, ItemJSON {
 }
 
 // MARK: - Item common init
+
 extension Item {
     func initItem(withName name: String, ID: String, description: String, useDate: Bool, startDate: Date, endDate: Date) {
         self.name = name
@@ -59,6 +60,7 @@ extension Item {
 }
 
 // MARK: - Item common JSON functions 
+
 extension Item {
     func getItemAsJSONDictionary() -> JSONDictionary {
         var dict: JSONDictionary = [:]
@@ -118,6 +120,7 @@ extension Item {
 }
 
 // MARK: - Item general purpose functions
+
 extension Item {
     func saveToFile() throws {
         guard let JSONString = toString() else {

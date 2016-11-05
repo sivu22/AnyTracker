@@ -16,10 +16,12 @@ protocol EditItemDelegate: class {
     func updateItem(fromSender sender: NewItemViewController)
 }
 
-class NewItemViewController: UIViewController, UITextFieldDelegate {
+class NewItemViewController: UIViewController {
 
     weak var delegateNew: NewItemDelegate?
     weak var delegateEdit: EditItemDelegate?
+    
+    //weak var keyboardDelegate: SimpleKeyboardDelegate?
     
     @IBOutlet weak var createBarButton: UIBarButtonItem!
     @IBOutlet weak var nameTextField: UITextField!
@@ -31,7 +33,8 @@ class NewItemViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var endDateTextField: UITextField!
     
     @IBOutlet weak var scrollView: UIScrollView!
-    var activeView: UIView?
+    
+    var simpleKeyboard: SimpleKeyboard?
     
     var list: List!
     var longDateFormat: Bool!
@@ -58,22 +61,9 @@ class NewItemViewController: UIViewController, UITextFieldDelegate {
         return (calendar.date(from: minDateComponents)!, calendar.date(from: maxDateComponents)!)
     }()
     
-    var viewOffset: CGFloat = 0
-    var keyboardAnimationDuration: Double = Constants.Animations.keyboardDuration
-    var keyboardAnimationCurve: UIViewAnimationCurve = Constants.Animations.keyboardCurve
-
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        nameTextField.delegate = self
-        descriptionTextField.delegate = self
-        startDateTextField.delegate = self
-        endDateTextField.delegate = self
-        
-        // Hide the cursor
-        startDateTextField.tintColor = UIColor.clear
-        endDateTextField.tintColor = UIColor.clear
         
         // Color the segmented control
         let views = typeControl.subviews
@@ -112,95 +102,34 @@ class NewItemViewController: UIViewController, UITextFieldDelegate {
         startDateTextField.text = Utils.stringFrom(date: startDate, startDate: true, longFormat: longDateFormat)
         endDateTextField.text = Utils.stringFrom(date: endDate, startDate: false, longFormat: longDateFormat)
         
-        Utils.addDoneButton(toDateTextField: startDateTextField, forTarget: view)
-        Utils.addDoneButton(toDateTextField: endDateTextField, forTarget: view)
+        simpleKeyboard = SimpleKeyboard.createKeyboard(forControls: [nameTextField, descriptionTextField], fromViewController: self)
+        simpleKeyboard?.add(control: startDateTextField, withDoneButtonKeyboard: true)
+        simpleKeyboard?.add(control: endDateTextField, withDoneButtonKeyboard: true)
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(NewItemViewController.keyboardWillShow(_:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(NewItemViewController.keyboardWillHide(_:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        if let keyboard = simpleKeyboard {
+            keyboard.enable()
+            
+            keyboard.textFieldShouldReturn = { textField in
+                textField.resignFirstResponder()
+                
+                return true
+            }
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        NotificationCenter.default.removeObserver(self)
+        simpleKeyboard?.disable()
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
-    }
-    
-    func adaptView(moveUp: Bool)
-    {
-        var movementDistance: CGFloat = -viewOffset
-        let movementDuration: Double = keyboardAnimationDuration
-        
-        if !moveUp {
-            movementDistance = -movementDistance
-        }
-        
-        UIView.beginAnimations("adaptView", context: nil)
-        UIView.setAnimationCurve(keyboardAnimationCurve)
-        UIView.setAnimationBeginsFromCurrentState(true)
-        UIView.setAnimationDuration(movementDuration)
-        view.frame = view.frame.offsetBy(dx: 0, dy: movementDistance)
-        UIView.commitAnimations()
-    }
-    
-    func keyboardWillShow(_ notification: NSNotification) {
-        var keyboardHeight: CGFloat = 0
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-            keyboardHeight = keyboardSize.height
-        }
-        
-        var viewHeight = view.frame.size.height
-        if viewOffset == 0 {
-            viewHeight -= keyboardHeight
-        } else {
-            return
-        }
-        
-        keyboardAnimationDuration = (notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? Constants.Animations.keyboardDuration
-        keyboardAnimationCurve = UIViewAnimationCurve(rawValue: (notification.userInfo?[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber)?.intValue ?? Constants.Animations.keyboardCurve.rawValue)!
-        
-        let activeTextFieldRect: CGRect = activeView!.frame
-        var lastVisiblePoint: CGPoint = CGPoint(x: activeTextFieldRect.origin.x, y: activeTextFieldRect.origin.y + activeTextFieldRect.height + Constants.Animations.keyboardDistanceToControl)
-        if activeView == startDateTextField || activeView == endDateTextField {
-            lastVisiblePoint = CGPoint(x: lastVisiblePoint.x + dateRangeView.frame.origin.x, y: lastVisiblePoint.y + dateRangeView.frame.origin.y)
-        }
-        
-        if lastVisiblePoint.y > viewHeight {
-            viewOffset = lastVisiblePoint.y - viewHeight
-            if viewOffset > keyboardHeight {
-                viewOffset = keyboardHeight
-            }
-            adaptView(moveUp: true)
-        }
-    }
-    
-    func keyboardWillHide(_ notification: NSNotification) {
-        if viewOffset != 0 {
-            adaptView(moveUp: false)
-            viewOffset = 0
-        }
-    }
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        
-        return true
-    }
-    
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        activeView = textField
-    }
-    
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        activeView = nil
     }
     
     func prepareForDismissingController() {

@@ -16,7 +16,7 @@ class ItemSumViewController: UIViewController, UITableViewDelegate, UITableViewD
     @IBOutlet weak var sumLabel: UILabel!
     @IBOutlet weak var elementsTableView: UITableView!
     
-    var activeView: UIView?
+    var simpleKeyboard: SimpleKeyboard!
     
     var itemChangeDelegate: ItemChangeDelegate?
     
@@ -42,22 +42,28 @@ class ItemSumViewController: UIViewController, UITableViewDelegate, UITableViewD
         elementsTableView.dataSource = self
         elementsTableView.tableFooterView = UIView(frame: CGRect.zero)
         
-        nameTextField.delegate = self
-        valueTextField.delegate = self
+        simpleKeyboard = SimpleKeyboard(fromViewController: self)
+        simpleKeyboard.add(control: nameTextField)
+        simpleKeyboard.add(control: valueTextField)
         Utils.addDoneButton(toTextField: valueTextField, forTarget: view, negativeTarget: self, negativeSelector: #selector(ItemSumViewController.negativePressed))
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(ItemSumViewController.keyboardWillShow(_:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(ItemSumViewController.keyboardWillHide(_:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        simpleKeyboard.enable()
+        
+        simpleKeyboard.textFieldShouldReturn = { textField in
+            textField.resignFirstResponder()
+            
+            return true
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        NotificationCenter.default.removeObserver(self)
+        simpleKeyboard.disable()
     }
     
     override func didReceiveMemoryWarning() {
@@ -65,92 +71,14 @@ class ItemSumViewController: UIViewController, UITableViewDelegate, UITableViewD
         // Dispose of any resources that can be recreated.
     }
     
-    func adaptView(moveUp: Bool)
-    {
-        var movementDistance: CGFloat = -viewOffset
-        let movementDuration: Double = keyboardAnimationDuration
-        
-        if !moveUp {
-            movementDistance = -movementDistance
-        }
-        
-        UIView.beginAnimations("adaptView", context: nil)
-        UIView.setAnimationCurve(keyboardAnimationCurve)
-        UIView.setAnimationBeginsFromCurrentState(true)
-        UIView.setAnimationDuration(movementDuration)
-        view.frame = view.frame.offsetBy(dx: 0, dy: movementDistance)
-        UIView.commitAnimations()
-    }
-    
-    func keyboardWillShow(_ notification: Notification) {
-        keyboardVisible = true
-        
-        var keyboardHeight: CGFloat = 0
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-            keyboardHeight = keyboardSize.height
-        }
-        
-        var viewHeight = view.frame.size.height
-        if viewOffset == 0 {
-            shownKeyboardHeight = keyboardHeight
-            viewHeight -= keyboardHeight
-        } else if shownKeyboardHeight == keyboardHeight {
-            return
-        } else {
-            let diff = shownKeyboardHeight - keyboardHeight
-            view.frame.size.height += diff
-            shownKeyboardHeight = keyboardHeight
-            return
-        }
-        
-        keyboardAnimationDuration = (notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? Constants.Animations.keyboardDuration
-        keyboardAnimationCurve = UIViewAnimationCurve(rawValue: (notification.userInfo?[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber)?.intValue ?? Constants.Animations.keyboardCurve.rawValue)!
-        
-        let activeControlRect: CGRect = activeView!.frame
-        var lastVisiblePoint: CGPoint = CGPoint(x: activeControlRect.origin.x, y: activeControlRect.origin.y + activeControlRect.height + Constants.Animations.keyboardDistanceToControl)
-        if activeView != nameTextField && activeView != valueTextField {
-            lastVisiblePoint = activeView!.convert(lastVisiblePoint, to: view)
-        }
-        
-        if lastVisiblePoint.y > viewHeight {
-            viewOffset = lastVisiblePoint.y - viewHeight
-            if viewOffset > keyboardHeight {
-                viewOffset = keyboardHeight
-            }
-            adaptView(moveUp: true)
-        }
-    }
-    
-    func keyboardWillHide(_ notification: Notification) {
-        keyboardVisible = false
-        
-        if viewOffset != 0 {
-            adaptView(moveUp: false)
-            viewOffset = 0
-        }
-    }
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        
-        return true
-    }
-    
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        activeView = textField.textInputView
-    }
-    
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        activeView = nil
-    }
-    
     // MARK: - CellKeyboardEvent
+    
     func willBeginEditing(fromView view: UIView) {
-        activeView = view
+        simpleKeyboard.setActive(view: view)
     }
     
     func willEndEditing(fromView view: UIView) {
-        activeView = nil
+        simpleKeyboard.clearActiveView()
     }
     
     // MARK: - Actions
@@ -201,6 +129,7 @@ class ItemSumViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     // MARK: - TableView
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return item.elements.count
     }

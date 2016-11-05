@@ -10,6 +10,7 @@
 		52035E8D1DA7F69D00BB3438 /* ItemJournal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52035E8C1DA7F69D00BB3438 /* ItemJournal.swift */; };
 		52035E911DA83E5E00BB3438 /* ItemJournalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52035E901DA83E5E00BB3438 /* ItemJournalViewController.swift */; };
 		52035E931DA9465800BB3438 /* ItemJournalCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52035E921DA9465800BB3438 /* ItemJournalCell.swift */; };
+		520F89531DC2AB98009EBA1F /* SimpleKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 520F89521DC2AB98009EBA1F /* SimpleKeyboard.swift */; };
 		5218B9FC1D7B5E2000D97FF8 /* UtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5218B9FB1D7B5E2000D97FF8 /* UtilsTests.swift */; };
 		5231D42D1C88D82700B35A87 /* ListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5231D42C1C88D82700B35A87 /* ListCell.swift */; };
 		5231D42F1C90CA9600B35A87 /* List.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5231D42E1C90CA9600B35A87 /* List.swift */; };
@@ -62,6 +63,7 @@
 		52035E8C1DA7F69D00BB3438 /* ItemJournal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemJournal.swift; sourceTree = "<group>"; };
 		52035E901DA83E5E00BB3438 /* ItemJournalViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemJournalViewController.swift; sourceTree = "<group>"; };
 		52035E921DA9465800BB3438 /* ItemJournalCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemJournalCell.swift; sourceTree = "<group>"; };
+		520F89521DC2AB98009EBA1F /* SimpleKeyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleKeyboard.swift; sourceTree = "<group>"; };
 		5218B9FB1D7B5E2000D97FF8 /* UtilsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UtilsTests.swift; sourceTree = "<group>"; };
 		5231D42C1C88D82700B35A87 /* ListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListCell.swift; sourceTree = "<group>"; };
 		5231D42E1C90CA9600B35A87 /* List.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = List.swift; sourceTree = "<group>"; };
@@ -146,6 +148,15 @@
 			name = Item;
 			sourceTree = "<group>";
 		};
+		520F89511DC2AA73009EBA1F /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				52F0E9651D57D5A1004D613C /* LongPressReorder.swift */,
+				520F89521DC2AB98009EBA1F /* SimpleKeyboard.swift */,
+			);
+			name = Helpers;
+			sourceTree = "<group>";
+		};
 		52915A601C6934F5004F835F = {
 			isa = PBXGroup;
 			children = (
@@ -224,6 +235,7 @@
 		52915A9C1C693B90004F835F /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				520F89511DC2AA73009EBA1F /* Helpers */,
 				52915A6E1C6934F5004F835F /* ListsTableViewController.swift */,
 				5231D4321C9B57AA00B35A87 /* NewListViewController.swift */,
 				52915AA01C694246004F835F /* SettingsTableViewController.swift */,
@@ -232,7 +244,6 @@
 				523D08561D722E83005228E5 /* ItemSumViewController.swift */,
 				526172A81D68CBAD00283D11 /* ItemCounterViewController.swift */,
 				52035E901DA83E5E00BB3438 /* ItemJournalViewController.swift */,
-				52F0E9651D57D5A1004D613C /* LongPressReorder.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -321,6 +332,7 @@
 					};
 					52915A7C1C6934F5004F835F = {
 						CreatedOnToolsVersion = 7.2.1;
+						DevelopmentTeam = 473859EV6W;
 						LastSwiftMigration = 0800;
 						TestTargetID = 52915A681C6934F5004F835F;
 					};
@@ -408,6 +420,7 @@
 				526172A91D68CBAD00283D11 /* ItemCounterViewController.swift in Sources */,
 				52035E8D1DA7F69D00BB3438 /* ItemJournal.swift in Sources */,
 				5231D42F1C90CA9600B35A87 /* List.swift in Sources */,
+				520F89531DC2AB98009EBA1F /* SimpleKeyboard.swift in Sources */,
 				52F0E9661D57D5A1004D613C /* LongPressReorder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -491,7 +504,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_OPTIMIZATION_LEVEL = s;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -506,7 +519,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -537,6 +550,7 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = s;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -559,6 +573,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = 473859EV6W;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = AnyTracker/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -566,6 +581,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.sivu.anytracker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -577,12 +593,14 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = 473859EV6W;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = AnyTracker/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sivu.anytracker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
@@ -591,10 +609,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 473859EV6W;
+				GCC_OPTIMIZATION_LEVEL = s;
 				INFOPLIST_FILE = AnyTrackerTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sivu.anytrackertests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AnyTracker.app/AnyTracker";
 			};
@@ -604,10 +625,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 473859EV6W;
+				GCC_OPTIMIZATION_LEVEL = s;
 				INFOPLIST_FILE = AnyTrackerTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sivu.anytrackertests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AnyTracker.app/AnyTracker";
 			};

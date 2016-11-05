@@ -375,3 +375,10 @@ extension UIButton {
         alpha = 0.3
     }
 }
+
+extension UIBarButtonItem {
+    func hide() {
+        isEnabled = false
+        tintColor = UIColor.clear
+    }
+}

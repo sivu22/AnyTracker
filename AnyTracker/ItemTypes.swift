@@ -42,6 +42,7 @@ enum ItemType: String {
 }
 
 // MARK: - Sum
+
 struct Element {
     let name: String
     let value: Double
@@ -53,11 +54,13 @@ protocol ItemTypeSum {
 }
 
 // MARK: - Counter
+
 protocol ItemTypeCounter {
     var counter: UInt { get }
 }
 
 // MARK: - Journal
+
 struct Entry {
     let name: String
     let value: Date

@@ -48,8 +48,7 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
         if listName == "all" {
             allItems = true
             // ALL is only for looking at available items (readonly)
-            addButton.isEnabled = false
-            addButton.tintColor = UIColor.clear
+            addButton.hide()
             
             // Build up the list of items
             if let app = app, let lists = app.lists {

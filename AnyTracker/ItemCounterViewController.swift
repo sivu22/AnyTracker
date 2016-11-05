@@ -35,8 +35,8 @@ class ItemCounterViewController: UIViewController, NotifyItemUpdate {
         // Dispose of any resources that can be recreated.
     }
     
-
     // MARK: - Actions
+    
     @IBAction func incPressed(_ sender: UIButton) {
         do {
             try item.changeCounter(byIncreasing: true)
