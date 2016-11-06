@@ -162,7 +162,6 @@ extension SimpleKeyboard {
         }
         
         var viewHeight = viewController.view.frame.size.height
-        let totalViewHeight = viewHeight
         if viewOffset == 0 {
             viewHeight -= keyboardHeight
         } else {
@@ -177,14 +176,7 @@ extension SimpleKeyboard {
         }
         let activeViewRect: CGRect = activeView!.frame
         var lastVisiblePoint: CGPoint = CGPoint(x: activeViewRect.origin.x, y: activeViewRect.origin.y + activeViewRect.height + Constants.Animations.keyboardDistanceToControl)
-        // 0 if view is direct child of VC view, can be different than 0 in a view hierarchy
-        let parentOriginY = getParentYCoord(forView: activeView!)
-        
-        if lastVisiblePoint.y + parentOriginY > totalViewHeight {
-            lastVisiblePoint = activeView!.convert(lastVisiblePoint, to: viewController.view)
-        } else {
-            lastVisiblePoint = CGPoint(x: lastVisiblePoint.x, y: lastVisiblePoint.y + parentOriginY)
-        }
+        lastVisiblePoint = activeView!.superview?.convert(lastVisiblePoint, to: nil) ?? lastVisiblePoint
         
         if lastVisiblePoint.y > viewHeight {
             viewOffset = lastVisiblePoint.y - viewHeight
