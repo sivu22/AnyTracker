@@ -56,8 +56,7 @@ class SimpleKeyboard: NSObject {
         }
     }
     
-    static func createKeyboard(forControls controls: [UIView?], fromViewController vc: UIViewController, andEnable enable: Bool = false) -> SimpleKeyboard? {
-        var newKeyboard: SimpleKeyboard?
+    static func createKeyboard(forControls controls: [UIView?], fromViewController vc: UIViewController, andEnable enable: Bool = false) -> SimpleKeyboard {
         var validControls: [UIView] = []
         for control in controls {
             if control != nil {
@@ -67,12 +66,15 @@ class SimpleKeyboard: NSObject {
             }
         }
         
+        var newKeyboard: SimpleKeyboard
         if validControls.count > 0 {
             newKeyboard = SimpleKeyboard(withControls: validControls, fromViewController: vc)
-            
-            if enable {
-                newKeyboard!.enable()
-            }
+        } else {
+            newKeyboard = SimpleKeyboard(fromViewController: vc)
+        }
+        
+        if enable {
+            newKeyboard.enable()
         }
         
         return newKeyboard
@@ -98,6 +100,17 @@ class SimpleKeyboard: NSObject {
     
     func disable() {
         NotificationCenter.default.removeObserver(self)
+        
+        for control in targetControls {
+            if control.isFirstResponder {
+                control.resignFirstResponder()
+                
+                adaptView(moveUp: false)
+                viewOffset = 0
+                
+                break
+            }
+        }
     }
     
     // Manually override the active input control
