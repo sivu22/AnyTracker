@@ -40,16 +40,24 @@ class ListsTableViewController: UITableViewController, NewListDelegate, ItemsDel
             return
         }
         if !app.noContent {
-            do {
-                app.lists = try Lists.loadListsFromFile()
-            } catch let error as Status {
-                let alert = error.createErrorAlert()
-                present(alert, animated: true, completion: nil)
-            } catch {
-            }
-            
-            if app.lists == nil {
-                Utils.debugLog("Failed to load lists from file \(Constants.File.lists)")
+            DispatchQueue.global().async {
+                do {
+                    app.lists = try Lists.loadListsFromFile()
+                } catch let error as Status {
+                    DispatchQueue.main.async {
+                        let alert = error.createErrorAlert()
+                        self.present(alert, animated: true, completion: nil)
+                    }
+                } catch {
+                }
+                
+                if app.lists == nil {
+                    Utils.debugLog("Failed to load lists from file \(Constants.File.lists)")
+                } else {
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
+                    }
+                }
             }
         }
         

@@ -21,8 +21,6 @@ class NewItemViewController: UIViewController {
     weak var delegateNew: NewItemDelegate?
     weak var delegateEdit: EditItemDelegate?
     
-    //weak var keyboardDelegate: SimpleKeyboardDelegate?
-    
     @IBOutlet weak var createBarButton: UIBarButtonItem!
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var descriptionTextField: UITextField!
