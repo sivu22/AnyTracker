@@ -307,6 +307,7 @@ class ListsTableViewController: UITableViewController, NewListDelegate, ItemsDel
                 if row > 0 {
                     let realRow = row - 1
                     vc.listName = app.lists!.listsData[realRow]
+                    vc.listTitle = app.lists!.cache?.lists[realRow].name
                     vc.delegate = self
                     selectedListIndex = realRow
                     currentListNumItems = app.lists!.getListNumItems(atIndex: selectedListIndex!)

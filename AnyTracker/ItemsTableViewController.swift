@@ -20,12 +20,12 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
     fileprivate(set) var app: App?
     
     var listName: String!
+    var listTitle: String!
     var allItems: Bool = false
     var alert: UIAlertController?
-    var alertPresenting: Bool = false
     
-    var list: List?             // Items from a certain list are shown
-    var items: [String]?        // All items from all lists are shown
+    var list: List?             // The current list (nil for ALL)
+    var items: [Item] = []      // All the items that can be seen in the VC
     
     fileprivate var addItem: Item? = nil
     fileprivate var addItemIndex: Int = 0
@@ -45,6 +45,7 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
         tableView.estimatedRowHeight = 90
         tableView.rowHeight = UITableViewAutomaticDimension
         
+        alert = nil
         if listName == "all" {
             allItems = true
             // ALL is only for looking at available items (readonly)
@@ -52,37 +53,60 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
             
             // Build up the list of items
             if let app = app, let lists = app.lists {
-                let listIDs = lists.getListIDs()
-                items = []
-                
-                for list in listIDs {
-                    let itemIDs = List.getItemIDs(fromList: list)
-                    for item in itemIDs {
-                        items!.append(item)
+                DispatchQueue.global().async {
+                    let listIDs = lists.getListIDs()
+                    
+                    for list in listIDs {
+                        let itemIDs = List.getItemIDs(fromList: list)
+                        for itemID in itemIDs {
+                            do {
+                                let item = try Items.loadItem(withID: itemID)
+                                self.items.append(item)
+                            } catch let error as Status {
+                                self.alert = error.createErrorAlert()
+                            } catch {
+                                self.alert = Status.ErrorDefault.createErrorAlert()
+                            }
+                        }
+                    }
+                    
+                    DispatchQueue.main.async {
+                        self.numItems = self.items.count
+                        self.tableView.reloadData()
                     }
                 }
             }
         } else {
-            alert = nil
+            title = listTitle
             
-            do {
-                list = try List.loadListFromFile(listName)
-                numItems = list!.numItems
-            } catch let error as Status {
-                alert = error.createErrorAlert()
-            } catch {
-            }
-            
-            title = list?.name ?? "Items"
-            
-            if let alert = alert {
-                addButton.isEnabled = false
-                if presentedViewController == nil {
-                    present(alert, animated: true, completion: nil)
+            DispatchQueue.global().async {
+                do {
+                    self.list = try List.loadListFromFile(self.listName)
+                    self.numItems = self.list!.numItems
+                    
+                    for itemID in self.list!.items {
+                        let item = try Items.loadItem(withID: itemID)
+                        self.items.append(item)
+                    }
+                } catch let error as Status {
+                    self.alert = error.createErrorAlert()
+                } catch {
+                    self.alert = Status.ErrorDefault.createErrorAlert()
+                }
+                
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                    
+                    if let alert = self.alert {
+                        self.addButton.isEnabled = false
+                        if self.presentedViewController == nil {
+                            self.present(alert, animated: true, completion: nil)
+                        }
+                    }
+                    
+                    self.addLongPressGesture()
                 }
             }
-            
-            addLongPressGesture()
         }
     }
 
@@ -93,6 +117,12 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
             // Item is already added to list and written on disk
             numItems += 1
             delegate?.numItemsChange(increased: true)
+            
+            if addItemIndex == 0 {
+                items.insert(addItem!, at: 0)
+            } else {
+                items.append(addItem!)
+            }
             
             tableView.beginUpdates()
             tableView.insertRows(at: [IndexPath(row: addItemIndex, section: 0)], with: UITableViewRowAnimation.right)
@@ -128,43 +158,19 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let items = items {
-            return items.count
-        }
-        
-        return list?.numItems ?? 0
+        return numItems == items.count ? numItems : items.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ItemCell", for: indexPath) as! ItemCell
 
-        let itemID: String = getItemID(fromIndex: (indexPath as NSIndexPath).row)
-        do {
-            let item = try Items.loadItem(withID: itemID)
-            cell.initCell(withItem: item, separator: app?.numberSeparator ?? true, longFormat: app?.dateFormatLong ?? true)
-        } catch let error as Status {
-            if !alertPresenting {
-                alertPresenting = true
-                let alert = error.createErrorAlert()
-                present(alert, animated: true, completion: {
-                    self.alertPresenting = false
-                })
-            }
-        } catch {
-            if !alertPresenting {
-                alertPresenting = true
-                let alert = Status.ErrorDefault.createErrorAlert()
-                present(alert, animated: true, completion: {
-                    self.alertPresenting = false
-                })
-            }
-        }
+        cell.initCell(withItem: items[(indexPath as NSIndexPath).row], separator: app?.numberSeparator ?? true, longFormat: app?.dateFormatLong ?? true)
         
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let itemID: String = getItemID(fromIndex: (indexPath as NSIndexPath).row)
+        let itemID: String = items[(indexPath as NSIndexPath).row].ID
         
         guard let type = Items.getItemType(fromID: itemID) else {
             Utils.debugLog("Can't get item type of item \(itemID) at index \(indexPath)")
@@ -186,29 +192,36 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
         if allItems {
             return false
         }
+        
         return true
     }
 
     fileprivate func deleteItem(withIndexPath indexPath: IndexPath) {
         let index = (indexPath as NSIndexPath).row
+        var alert: UIAlertController?
         
-        do {
-            let _ = Items.deleteItemFile(withID: list!.items[index])
-            try list!.removeItem(atIndex: index)
-        }  catch let error as Status {
-            let alert = error.createErrorAlert()
-            present(alert, animated: true, completion: nil)
-            return
-        } catch {
-            let alert = Status.ErrorDefault.createErrorAlert()
-            present(alert, animated: true, completion: nil)
-            return
+        DispatchQueue.global().async {
+            do {
+                let _ = Items.deleteItemFile(withID: self.list!.items[index])
+                try self.list!.removeItem(atIndex: index)
+            }  catch let error as Status {
+                alert = error.createErrorAlert()
+            } catch {
+                alert = Status.ErrorDefault.createErrorAlert()
+            }
+            
+            DispatchQueue.main.async {
+                if alert != nil {
+                    self.present(alert!, animated: true, completion: nil)
+                    return
+                }
+                
+                self.numItems -= 1
+                self.delegate?.numItemsChange(increased: false)
+                
+                self.tableView.deleteRows(at: [indexPath], with: .fade)
+            }
         }
-        
-        numItems -= 1
-        delegate?.numItemsChange(increased: false)
-        
-        tableView.deleteRows(at: [indexPath], with: .fade)
     }
     
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
@@ -221,19 +234,7 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
             self.editItemIndex = itemIndex
             self.itemUpdated = false
             vc.longDateFormat = self.app?.dateFormatLong ?? true
-            
-            do {
-                let item = try Items.loadItem(withID: self.list?.items[itemIndex] ?? "")
-                vc.editItem = item
-            } catch let error as Status {
-                let alert = error.createErrorAlert()
-                self.present(alert, animated: true, completion: nil)
-                return
-            } catch {
-                let alert = Status.ErrorDefault.createErrorAlert()
-                self.present(alert, animated: true, completion: nil)
-                return
-            }
+            vc.editItem = self.items[itemIndex]
             
             self.present(vcNav, animated: true, completion: nil)
             
@@ -242,18 +243,7 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
         edit.backgroundColor = UIColor.lightGray
         
         let delete = UITableViewRowAction(style: .destructive, title: "Delete") { action, index in
-            var item: Item!
-            do {
-                item = try Items.loadItem(withID: self.list?.items[itemIndex] ?? "")
-            } catch let error as Status {
-                let alert = error.createErrorAlert()
-                self.present(alert, animated: true, completion: nil)
-                return
-            } catch {
-                let alert = Status.ErrorDefault.createErrorAlert()
-                self.present(alert, animated: true, completion: nil)
-                return
-            }
+            let item = self.items[itemIndex]
             
             if !item.isEmpty() {
                 let alert = UIAlertController(title: "", message: "Are you sure you want to delete the item?", preferredStyle: UIAlertControllerStyle.alert)
@@ -293,6 +283,7 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
         if allItems {
             return false
         }
+        
         return true
     }
 
@@ -319,48 +310,21 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
             vc.numberSeparator = app?.numberSeparator ?? true
             vc.itemChangeDelegate = self
             refreshItemIndex = itemIndex
-            do {
-                let item = try Items.loadItem(withID: getItemID(fromIndex: itemIDIndex)) as! ItemSum
-                vc.item = item
-            } catch let error as Status {
-                let alert = error.createErrorAlert()
-                present(alert, animated: true, completion: nil)
-            } catch {
-                let alert = Status.ErrorDefault.createErrorAlert()
-                present(alert, animated: true, completion: nil)
-            }
+            vc.item = items[itemIDIndex] as! ItemSum
         }
         else if identifier == "toCounterItem" {
             let vc = segue.destination as! ItemCounterViewController
             vc.numberSeparator = app?.numberSeparator ?? true
             vc.itemChangeDelegate = self
             refreshItemIndex = itemIndex
-            do {
-                let item = try Items.loadItem(withID: getItemID(fromIndex: itemIDIndex)) as! ItemCounter
-                vc.item = item
-            } catch let error as Status {
-                let alert = error.createErrorAlert()
-                present(alert, animated: true, completion: nil)
-            } catch {
-                let alert = Status.ErrorDefault.createErrorAlert()
-                present(alert, animated: true, completion: nil)
-            }
+            vc.item = items[itemIDIndex] as! ItemCounter
         }
         else if identifier == "toJournalItem" {
             let vc = segue.destination as! ItemJournalViewController
             vc.itemChangeDelegate = self
             vc.longDateFormat = app?.dateFormatLong ?? true
             refreshItemIndex = itemIndex
-            do {
-                let item = try Items.loadItem(withID: getItemID(fromIndex: itemIDIndex)) as! ItemJournal
-                vc.item = item
-            } catch let error as Status {
-                let alert = error.createErrorAlert()
-                present(alert, animated: true, completion: nil)
-            } catch {
-                let alert = Status.ErrorDefault.createErrorAlert()
-                present(alert, animated: true, completion: nil)
-            }
+            vc.item = items[itemIDIndex] as! ItemJournal
         }
     }
     
@@ -388,17 +352,6 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
         refreshItem = true
     }
     
-    func getItemID(fromIndex index: Int) -> String {
-        var itemID: String = ""
-        if let list = list {
-            itemID = list.items[index]
-        } else if let items = items {
-            itemID = items[index]
-        }
-        
-        return itemID
-    }
-    
     // MARK: - Long press drag and drop
     
     override func changedAction() {
@@ -407,14 +360,22 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
     
     override func defaultAction() {
         // Save the new list of items IDs
-        do {
-            try list!.saveListToFile()
-        } catch let error as Status {
-            let alert = error.createErrorAlert()
-            present(alert, animated: true, completion: nil)
-        } catch {
-            let alert = Status.ErrorDefault.createErrorAlert()
-            present(alert, animated: true, completion: nil)
+        DispatchQueue.global().async {
+            var alert: UIAlertController?
+            
+            do {
+                try self.list!.saveListToFile()
+            } catch let error as Status {
+                alert = error.createErrorAlert()
+            } catch {
+                alert = Status.ErrorDefault.createErrorAlert()
+            }
+            
+            if alert != nil {
+                DispatchQueue.main.async {
+                    self.present(alert!, animated: true, completion: nil)
+                }
+            }
         }
     }
 }
