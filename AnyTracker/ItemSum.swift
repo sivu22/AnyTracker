@@ -114,6 +114,14 @@ class ItemSum: Item, ItemTypeSum {
         Utils.debugLog("Successfully updated element of Sum item \(ID)")
     }
     
+    func exchangeElement(fromIndex src: Int, toIndex dst: Int) {
+        if src < 0 || dst < 0 || src >= elements.count || dst >= elements.count {
+            return
+        }
+        
+        swap(&elements[src], &elements[dst])
+    }
+    
     // MARK: -
 }
 

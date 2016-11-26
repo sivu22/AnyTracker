@@ -29,6 +29,8 @@ class ItemSumViewController: UIViewController, UITableViewDelegate, UITableViewD
     var keyboardAnimationDuration: Double = Constants.Animations.keyboardDuration
     var keyboardAnimationCurve: UIViewAnimationCurve = Constants.Animations.keyboardCurve
     
+    var reorderTableView: LongPressReorderTableView!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,6 +48,10 @@ class ItemSumViewController: UIViewController, UITableViewDelegate, UITableViewD
         simpleKeyboard.add(control: nameTextField)
         simpleKeyboard.add(control: valueTextField)
         Utils.addDoneButton(toTextField: valueTextField, forTarget: view, negativeTarget: self, negativeSelector: #selector(ItemSumViewController.negativePressed))
+        
+        reorderTableView = LongPressReorderTableView(elementsTableView)
+        reorderTableView.delegate = self
+        reorderTableView.enableLongPressReorder()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -169,6 +175,33 @@ class ItemSumViewController: UIViewController, UITableViewDelegate, UITableViewD
             
             sumLabel.text = item.sum.asString(withSeparator: numberSeparator)
             tableView.deleteRows(at: [indexPath], with: .fade)
+        }
+    }
+}
+
+// MARK: - Long press drag and drop reorder
+
+extension ItemSumViewController {
+    
+    override func positionChanged(currentIndex: IndexPath, newIndex: IndexPath) {
+        item.exchangeElement(fromIndex: currentIndex.row, toIndex: newIndex.row)
+    }
+    
+    override func reorderFinished(initialIndex: IndexPath, finalIndex: IndexPath) {
+        DispatchQueue.global().async {
+            do {
+                try self.item.saveToFile()
+            } catch let error as Status {
+                DispatchQueue.main.async {
+                    let alert = error.createErrorAlert()
+                    self.present(alert, animated: true, completion: nil)
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    let alert = Status.ErrorDefault.createErrorAlert()
+                    self.present(alert, animated: true, completion: nil)
+                }
+            }
         }
     }
 }

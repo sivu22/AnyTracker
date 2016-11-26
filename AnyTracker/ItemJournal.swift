@@ -104,6 +104,14 @@ class ItemJournal: Item, ItemTypeJournal {
         Utils.debugLog("Successfully updated entry of Journal item \(ID)")
     }
     
+    func exchangeEntry(fromIndex src: Int, toIndex dst: Int) {
+        if src < 0 || dst < 0 || src >= entries.count || dst >= entries.count {
+            return
+        }
+        
+        swap(&entries[src], &entries[dst])
+    }
+    
     // MARK: -
 }
 

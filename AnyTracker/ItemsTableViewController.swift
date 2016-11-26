@@ -359,6 +359,7 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
 }
 
 // MARK: - Long press drag and drop reorder
+
 extension ItemsTableViewController {
     
     override func positionChanged(currentIndex: IndexPath, newIndex: IndexPath) {

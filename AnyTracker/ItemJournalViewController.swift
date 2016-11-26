@@ -29,6 +29,8 @@ class ItemJournalViewController: UIViewController, UITableViewDelegate, UITableV
     var keyboardAnimationDuration: Double = Constants.Animations.keyboardDuration
     var keyboardAnimationCurve: UIViewAnimationCurve = Constants.Animations.keyboardCurve
     
+    var reorderTableView: LongPressReorderTableView!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,6 +50,10 @@ class ItemJournalViewController: UIViewController, UITableViewDelegate, UITableV
         
         simpleKeyboard = SimpleKeyboard.createKeyboard(forControls: [nameTextField], fromViewController: self)
         simpleKeyboard.add(control: valueTextField, withDoneButtonKeyboard: true)
+        
+        reorderTableView = LongPressReorderTableView(entriesTableView)
+        reorderTableView.delegate = self
+        reorderTableView.enableLongPressReorder()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -173,3 +179,31 @@ class ItemJournalViewController: UIViewController, UITableViewDelegate, UITableV
         }
     }
 }
+
+// MARK: - Long press drag and drop reorder
+
+extension ItemJournalViewController {
+    
+    override func positionChanged(currentIndex: IndexPath, newIndex: IndexPath) {
+        item.exchangeEntry(fromIndex: currentIndex.row, toIndex: newIndex.row)
+    }
+    
+    override func reorderFinished(initialIndex: IndexPath, finalIndex: IndexPath) {
+        DispatchQueue.global().async {
+            do {
+                try self.item.saveToFile()
+            } catch let error as Status {
+                DispatchQueue.main.async {
+                    let alert = error.createErrorAlert()
+                    self.present(alert, animated: true, completion: nil)
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    let alert = Status.ErrorDefault.createErrorAlert()
+                    self.present(alert, animated: true, completion: nil)
+                }
+            }
+        }
+    }
+}
+
