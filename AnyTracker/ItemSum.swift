@@ -14,7 +14,7 @@ class ItemSum: Item, ItemTypeSum {
     var name: String = ""
     var ID: String = ""
     var description: String = ""
-    fileprivate(set) var type: ItemType = ItemType.Sum
+    fileprivate(set) var type: ItemType = ItemType.sum
     var useDate: Bool = false
     var startDate: Date
     var endDate: Date
@@ -55,7 +55,7 @@ class ItemSum: Item, ItemTypeSum {
             if let statusError = error as? Status {
                 throw statusError
             }
-            throw Status.ErrorDefault
+            throw Status.errorDefault
         }
         
         Utils.debugLog("Successfully added element to Sum item \(ID)")
@@ -63,7 +63,7 @@ class ItemSum: Item, ItemTypeSum {
     
     func remove(atIndex index: Int) throws {
         if index < 0 || index >= elements.count {
-            throw Status.ErrorIndex
+            throw Status.errorIndex
         }
         
         let deleted = Element(name: elements[index].name, value: elements[index].value)
@@ -78,7 +78,7 @@ class ItemSum: Item, ItemTypeSum {
             if let statusError = error as? Status {
                 throw statusError
             }
-            throw Status.ErrorDefault
+            throw Status.errorDefault
         }
         
         Utils.debugLog("Successfully removed element from Sum item \(ID)")
@@ -86,7 +86,7 @@ class ItemSum: Item, ItemTypeSum {
     
     func updateElement(atIndex index: Int, newName name: String, newValue value: Double) throws {
         if index < 0 || index >= elements.count {
-            throw Status.ErrorIndex
+            throw Status.errorIndex
         }
         
         if elements[index].name == name && elements[index].value == value {
@@ -108,7 +108,7 @@ class ItemSum: Item, ItemTypeSum {
             if let statusError = error as? Status {
                 throw statusError
             }
-            throw Status.ErrorDefault
+            throw Status.errorDefault
         }
         
         Utils.debugLog("Successfully updated element of Sum item \(ID)")
@@ -154,7 +154,7 @@ extension ItemSum: JSON {
         }
         
         Utils.debugLog(input!)
-        if type != ItemType.Sum.rawValue {
+        if type != ItemType.sum.rawValue {
             Utils.debugLog("Item is not of type sum")
             return nil
         }

@@ -48,12 +48,12 @@ class Lists {
     func saveListsToFile() throws {
         guard let JSONString = toJSONString() else {
             Utils.debugLog("Failed to serialize JSON lists")
-            throw Status.ErrorJSONSerialize
+            throw Status.errorJSONSerialize
         }
         
         if !Utils.createFile(withName: Constants.File.lists, withContent: JSONString, overwriteExisting: true) {
             Utils.debugLog("Failed to save lists to file")
-            throw Status.ErrorListsFileSave
+            throw Status.errorListsFileSave
         }
     }
     
@@ -61,12 +61,12 @@ class Lists {
         let content = Utils.readFile(withName: Constants.File.lists)
         guard content != nil else {
             Utils.debugLog("Failed to load lists from file")
-            throw Status.ErrorListsFileLoad
+            throw Status.errorListsFileLoad
         }
         
         guard let lists = fromJSONString(content) else {
             Utils.debugLog("Failed to deserialize JSON lists")
-            throw Status.ErrorJSONDeserialize
+            throw Status.errorJSONDeserialize
         }
 
         return lists
@@ -80,7 +80,7 @@ class Lists {
         } catch let error as Status {
             throw error
         } catch {
-            throw Status.ErrorDefault
+            throw Status.errorDefault
         }
         
         var index = 0

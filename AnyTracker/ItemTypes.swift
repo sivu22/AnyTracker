@@ -9,16 +9,16 @@
 import Foundation
 
 enum ItemType: String {
-    case Sum = "Sum", Counter = "Counter", Journal = "Journal"
+    case sum = "Sum", counter = "Counter", journal = "Journal"
     
     // Maximum 10 types of items!
     func getTypeIndex() -> Int {
         switch self {
-        case .Sum:
+        case .sum:
             return 0
-        case .Counter:
+        case .counter:
             return 1
-        case .Journal:
+        case .journal:
             return 2
         }
     }
@@ -26,11 +26,11 @@ enum ItemType: String {
     static func getType(fromIndex index: Character) -> ItemType? {
         switch index {
         case "0":
-            return Sum
+            return sum
         case "1":
-            return Counter
+            return counter
         case "2":
-            return Journal
+            return journal
         default:
             return nil
         }

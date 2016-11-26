@@ -48,7 +48,7 @@ class ItemCounterViewController: UIViewController, NotifyItemUpdate {
             let alert = error.createErrorAlert()
             present(alert, animated: true, completion: nil)
         } catch {
-            let alert = Status.ErrorDefault.createErrorAlert()
+            let alert = Status.errorDefault.createErrorAlert()
             present(alert, animated: true, completion: nil)
         }
         
@@ -68,7 +68,7 @@ class ItemCounterViewController: UIViewController, NotifyItemUpdate {
             let alert = error.createErrorAlert()
             present(alert, animated: true, completion: nil)
         } catch {
-            let alert = Status.ErrorDefault.createErrorAlert()
+            let alert = Status.errorDefault.createErrorAlert()
             present(alert, animated: true, completion: nil)
         }
         

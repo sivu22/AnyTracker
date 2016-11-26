@@ -14,7 +14,7 @@ class ItemCounter: Item, ItemTypeCounter {
     var name: String = ""
     var ID: String = ""
     var description: String = ""
-    fileprivate(set) var type: ItemType = ItemType.Counter
+    fileprivate(set) var type: ItemType = ItemType.counter
     var useDate: Bool = false
     var startDate: Date
     var endDate: Date
@@ -56,7 +56,7 @@ class ItemCounter: Item, ItemTypeCounter {
             throw error
         } catch {
             counter = oldCounter
-            throw Status.ErrorDefault
+            throw Status.errorDefault
         }
         
         Utils.debugLog("Successfully changed the Counter item \(ID)")
@@ -85,7 +85,7 @@ extension ItemCounter: JSON {
         }
         
         Utils.debugLog(input!)
-        if type != ItemType.Counter.rawValue {
+        if type != ItemType.counter.rawValue {
             Utils.debugLog("Item is not of type counter")
             return nil
         }

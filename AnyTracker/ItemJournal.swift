@@ -14,7 +14,7 @@ class ItemJournal: Item, ItemTypeJournal {
     var name: String = ""
     var ID: String = ""
     var description: String = ""
-    fileprivate(set) var type: ItemType = ItemType.Journal
+    fileprivate(set) var type: ItemType = ItemType.journal
     var useDate: Bool = false
     var startDate: Date
     var endDate: Date
@@ -51,7 +51,7 @@ class ItemJournal: Item, ItemTypeJournal {
             if let statusError = error as? Status {
                 throw statusError
             }
-            throw Status.ErrorDefault
+            throw Status.errorDefault
         }
         
         Utils.debugLog("Successfully added entry to Journal item \(ID)")
@@ -59,7 +59,7 @@ class ItemJournal: Item, ItemTypeJournal {
     
     func remove(atIndex index: Int) throws {
         if index < 0 || index >= entries.count {
-            throw Status.ErrorIndex
+            throw Status.errorIndex
         }
         
         let deleted = Entry(name: entries[index].name, value: entries[index].value)
@@ -72,7 +72,7 @@ class ItemJournal: Item, ItemTypeJournal {
             if let statusError = error as? Status {
                 throw statusError
             }
-            throw Status.ErrorDefault
+            throw Status.errorDefault
         }
         
         Utils.debugLog("Successfully removed entry from Journal item \(ID)")
@@ -80,7 +80,7 @@ class ItemJournal: Item, ItemTypeJournal {
     
     func updateEntry(atIndex index: Int, newName name: String, newValue value: Date) throws {
         if index < 0 || index >= entries.count {
-            throw Status.ErrorIndex
+            throw Status.errorIndex
         }
         
         if entries[index].name == name && entries[index].value == value {
@@ -98,7 +98,7 @@ class ItemJournal: Item, ItemTypeJournal {
             if let statusError = error as? Status {
                 throw statusError
             }
-            throw Status.ErrorDefault
+            throw Status.errorDefault
         }
         
         Utils.debugLog("Successfully updated entry of Journal item \(ID)")
@@ -143,7 +143,7 @@ extension ItemJournal: JSON {
         }
         
         Utils.debugLog(input!)
-        if type != ItemType.Journal.rawValue {
+        if type != ItemType.journal.rawValue {
             Utils.debugLog("Item is not of type journal")
             return nil
         }

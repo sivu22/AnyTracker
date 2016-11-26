@@ -36,7 +36,7 @@ class List: Version, NameAndID {
     static func createList(withName name: String) throws -> List {
         guard Utils.validString(name) else {
             Utils.debugLog("Bad list name provided")
-            throw Status.ErrorInputString
+            throw Status.errorInputString
         }
         
         var i = 0
@@ -52,7 +52,7 @@ class List: Version, NameAndID {
         }
         
         if i == 10 {
-            throw Status.ErrorListFileSave
+            throw Status.errorListFileSave
         }
         
         let newList = List(name: name, ID: fileName)
@@ -75,12 +75,12 @@ class List: Version, NameAndID {
     func saveListToFile() throws {
         guard let JSONString = toJSONString() else {
             Utils.debugLog("Failed to serialize JSON list")
-            throw Status.ErrorJSONSerialize
+            throw Status.errorJSONSerialize
         }
         
         if !Utils.createFile(withName: ID, withContent: JSONString, overwriteExisting: true) {
             Utils.debugLog("Failed to save list to file")
-            throw Status.ErrorListFileSave
+            throw Status.errorListFileSave
         } else {
             Utils.debugLog("Saved list to file: \(JSONString)")
         }
@@ -89,18 +89,18 @@ class List: Version, NameAndID {
     static func loadListFromFile(_ fileName: String) throws -> List {
         guard Utils.validString(fileName) else {
             Utils.debugLog("Bad filename for list")
-            throw Status.ErrorInputString
+            throw Status.errorInputString
         }
         
         let content = Utils.readFile(withName: fileName)
         if content == nil {
             Utils.debugLog("Failed to load list from file")
-            throw Status.ErrorListFileLoad
+            throw Status.errorListFileLoad
         }
         
         guard let list = fromJSONString(content) else {
             Utils.debugLog("Failed to deserialize JSON list")
-            throw Status.ErrorJSONDeserialize
+            throw Status.errorJSONDeserialize
         }
         
         return list
@@ -147,7 +147,7 @@ class List: Version, NameAndID {
     
     func removeItem(atIndex index: Int) throws {
         if index < 0 || index >= numItems {
-            throw Status.ErrorIndex
+            throw Status.errorIndex
         }
         
         items.remove(at: index)

@@ -64,7 +64,7 @@ class ItemJournalCell: UITableViewCell, UITextFieldDelegate, UITextViewDelegate 
             let alert = error.createErrorAlert()
             viewController?.present(alert, animated: true, completion: nil)
         } catch {
-            let alert = Status.ErrorDefault.createErrorAlert()
+            let alert = Status.errorDefault.createErrorAlert()
             viewController?.present(alert, animated: true, completion: nil)
         }
     }

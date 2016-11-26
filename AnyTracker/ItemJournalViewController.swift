@@ -101,7 +101,7 @@ class ItemJournalViewController: UIViewController, UITableViewDelegate, UITableV
             self.present(alert, animated: true, completion: nil)
             return
         } catch {
-            let alert = Status.ErrorDefault.createErrorAlert()
+            let alert = Status.errorDefault.createErrorAlert()
             self.present(alert, animated: true, completion: nil)
             return
         }
@@ -170,7 +170,7 @@ class ItemJournalViewController: UIViewController, UITableViewDelegate, UITableV
                 self.present(alert, animated: true, completion: nil)
                 return
             } catch {
-                let alert = Status.ErrorDefault.createErrorAlert()
+                let alert = Status.errorDefault.createErrorAlert()
                 self.present(alert, animated: true, completion: nil)
                 return
             }
@@ -199,7 +199,7 @@ extension ItemJournalViewController {
                 }
             } catch {
                 DispatchQueue.main.async {
-                    let alert = Status.ErrorDefault.createErrorAlert()
+                    let alert = Status.errorDefault.createErrorAlert()
                     self.present(alert, animated: true, completion: nil)
                 }
             }

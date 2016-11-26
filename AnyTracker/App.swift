@@ -48,33 +48,33 @@ struct Constants {
 }
 
 enum Status: String, Error {
-    case ErrorDefault = "Unknown error"
-    case ErrorInputString = "Bad input found!"
-    case ErrorIndex = "Index error"
+    case errorDefault = "Unknown error"
+    case errorInputString = "Bad input found!"
+    case errorIndex = "Index error"
     
-    case ErrorFailedToAddList = "Failed to add list. Try again later"
-    case ErrorListsFileSave = "Could not save lists data"
-    case ErrorListsFileLoad = "Failed to load lists data"
-    case ErrorListsBadCache = "Corrupted data!"
-    case ErrorListFileSave = "Could not save list. Try again later"
-    case ErrorListFileLoad = "Failed to load list"
-    case ErrorListDelete = "Failed to delete list"
+    case errorFailedToAddList = "Failed to add list. Try again later"
+    case errorListsFileSave = "Could not save lists data"
+    case errorListsFileLoad = "Failed to load lists data"
+    case errorListsBadCache = "Corrupted data!"
+    case errorListFileSave = "Could not save list. Try again later"
+    case errorListFileLoad = "Failed to load list"
+    case errorListDelete = "Failed to delete list"
     
-    case ErrorItemBadID = "Wrong item ID. Please try again"
-    case ErrorItemFileSave = "Could not save item. Try again later"
-    case ErrorItemFileLoad = "Failed to load item"
+    case errorItemBadID = "Wrong item ID. Please try again"
+    case errorItemFileSave = "Could not save item. Try again later"
+    case errorItemFileLoad = "Failed to load item"
     
-    case ErrorJSONDeserialize = "Could not load data: corrupted/invalid format"
-    case ErrorJSONSerialize = "Failed to serialize data"
+    case errorJSONDeserialize = "Could not load data: corrupted/invalid format"
+    case errorJSONSerialize = "Failed to serialize data"
     
     func createErrorAlert() -> UIAlertController {
         var title: String;
         switch self {
-        case .ErrorDefault, .ErrorInputString, .ErrorIndex:
+        case .errorDefault, .errorInputString, .errorIndex:
             title = "Fatal error"
-        case .ErrorFailedToAddList, .ErrorListsFileSave, .ErrorListsFileLoad, .ErrorListsBadCache,
-             .ErrorListFileSave, .ErrorListFileLoad, .ErrorListDelete, .ErrorItemBadID, .ErrorItemFileSave, .ErrorItemFileLoad,
-             .ErrorJSONDeserialize, .ErrorJSONSerialize:
+        case .errorFailedToAddList, .errorListsFileSave, .errorListsFileLoad, .errorListsBadCache,
+             .errorListFileSave, .errorListFileLoad, .errorListDelete, .errorItemBadID, .errorItemFileSave, .errorItemFileLoad,
+             .errorJSONDeserialize, .errorJSONSerialize:
             title = "Error"
         }
         

@@ -125,12 +125,12 @@ extension Item {
     func saveToFile() throws {
         guard let JSONString = toString() else {
             Utils.debugLog("Failed to serialize JSON item")
-            throw Status.ErrorJSONSerialize
+            throw Status.errorJSONSerialize
         }
         
         if !Utils.createFile(withName: ID, withContent: JSONString, overwriteExisting: true) {
             Utils.debugLog("Failed to save item to file")
-            throw Status.ErrorItemFileSave
+            throw Status.errorItemFileSave
         }
     }
     

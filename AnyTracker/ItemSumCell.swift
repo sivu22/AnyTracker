@@ -59,7 +59,7 @@ class ItemSumCell: UITableViewCell, UITextFieldDelegate {
             viewController?.present(alert, animated: true, completion: nil)
             return true
         } catch {
-            let alert = Status.ErrorDefault.createErrorAlert()
+            let alert = Status.errorDefault.createErrorAlert()
             viewController?.present(alert, animated: true, completion: nil)
             return true
         }
@@ -105,7 +105,7 @@ class ItemSumCell: UITableViewCell, UITextFieldDelegate {
             let alert = error.createErrorAlert()
             viewController?.present(alert, animated: true, completion: nil)
         } catch {
-            let alert = Status.ErrorDefault.createErrorAlert()
+            let alert = Status.errorDefault.createErrorAlert()
             viewController?.present(alert, animated: true, completion: nil)
         }
         

@@ -68,7 +68,7 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
                             } catch let error as Status {
                                 self.alert = error.createErrorAlert()
                             } catch {
-                                self.alert = Status.ErrorDefault.createErrorAlert()
+                                self.alert = Status.errorDefault.createErrorAlert()
                             }
                         }
                     }
@@ -94,7 +94,7 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
                 } catch let error as Status {
                     self.alert = error.createErrorAlert()
                 } catch {
-                    self.alert = Status.ErrorDefault.createErrorAlert()
+                    self.alert = Status.errorDefault.createErrorAlert()
                 }
                 
                 DispatchQueue.main.async {
@@ -183,11 +183,11 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
         }
         
         switch type {
-        case .Sum:
+        case .sum:
             performSegue(withIdentifier: "toSumItem", sender: indexPath)
-        case .Counter:
+        case .counter:
             performSegue(withIdentifier: "toCounterItem", sender: indexPath)
-        case .Journal:
+        case .journal:
             performSegue(withIdentifier: "toJournalItem", sender: indexPath)
         }
     }
@@ -212,7 +212,7 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
             }  catch let error as Status {
                 alert = error.createErrorAlert()
             } catch {
-                alert = Status.ErrorDefault.createErrorAlert()
+                alert = Status.errorDefault.createErrorAlert()
             }
             
             DispatchQueue.main.async {
@@ -376,7 +376,7 @@ extension ItemsTableViewController {
             } catch let error as Status {
                 alert = error.createErrorAlert()
             } catch {
-                alert = Status.ErrorDefault.createErrorAlert()
+                alert = Status.errorDefault.createErrorAlert()
             }
             
             if alert != nil {

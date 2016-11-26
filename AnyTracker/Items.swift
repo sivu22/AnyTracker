@@ -34,7 +34,7 @@ extension ItemOps {
         }
         
         if i == 10 {
-            throw Status.ErrorItemBadID
+            throw Status.errorItemBadID
         }
         
         return fileName
@@ -50,11 +50,11 @@ extension ItemOps {
         
         var item: Item
         switch type {
-        case .Sum:
+        case .sum:
             item = ItemSum(withName: name, ID: ID, description: description, useDate: useDate, startDate: startDate, endDate: endDate)
-        case .Counter:
+        case .counter:
             item = ItemCounter(withName: name, ID: ID, description: description, useDate: useDate, startDate: startDate, endDate: endDate)
-        case .Journal:
+        case .journal:
             item = ItemJournal(withName: name, ID: ID, description: description, useDate: useDate, startDate: startDate, endDate: endDate)
         }
         
@@ -63,11 +63,11 @@ extension ItemOps {
     
     static fileprivate func loadItem(ofType type: ItemType, withContent content: String) -> Item? {
         switch(type) {
-        case .Sum:
+        case .sum:
             return ItemSum.fromJSONString(content)
-        case .Counter:
+        case .counter:
             return ItemCounter.fromJSONString(content)
-        case .Journal:
+        case .journal:
             return ItemJournal.fromJSONString(content)
         }
     }
@@ -75,22 +75,22 @@ extension ItemOps {
     static func loadItem(withID fileName:String) throws -> Item {
         guard Utils.validString(fileName) && fileName.characters.count > 5 else {
             Utils.debugLog("Bad filename for item")
-            throw Status.ErrorInputString
+            throw Status.errorInputString
         }
         
         guard let content = Utils.readFile(withName: fileName) else {
             Utils.debugLog("Failed to load item from file")
-            throw Status.ErrorListFileLoad
+            throw Status.errorListFileLoad
         }
         
         guard let type = ItemType.getType(fromIndex: fileName[fileName.characters.index(fileName.startIndex, offsetBy: 4)]) else {
             Utils.debugLog("Failed to get item type")
-            throw Status.ErrorListFileLoad
+            throw Status.errorListFileLoad
         }
         
         guard let item = loadItem(ofType: type, withContent: content) else {
             Utils.debugLog("Failed to deserialize JSON item")
-            throw Status.ErrorJSONDeserialize
+            throw Status.errorJSONDeserialize
         }
         
         return item

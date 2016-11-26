@@ -78,7 +78,7 @@ class ListsTableViewController: UITableViewController, NewListDelegate, ItemsDel
         
         // No cache = no bueno
         if app.lists != nil && app.lists!.cache == nil {
-            let alert = Status.ErrorListsBadCache.createErrorAlert()
+            let alert = Status.errorListsBadCache.createErrorAlert()
             present(alert, animated: true, completion: nil)
         }
         
@@ -101,7 +101,7 @@ class ListsTableViewController: UITableViewController, NewListDelegate, ItemsDel
                     present(alert, animated: true, completion: nil)
                     return
                 } catch {
-                    let alert = Status.ErrorDefault.createErrorAlert()
+                    let alert = Status.errorDefault.createErrorAlert()
                     present(alert, animated: true, completion: nil)
                     return
                 }
@@ -115,7 +115,7 @@ class ListsTableViewController: UITableViewController, NewListDelegate, ItemsDel
                     tableView.insertRows(at: [IndexPath(row: 1 + index, section: 0)], with: UITableViewRowAnimation.right)
                     tableView.endUpdates()
                 } else {
-                    let alert = Status.ErrorFailedToAddList.createErrorAlert()
+                    let alert = Status.errorFailedToAddList.createErrorAlert()
                     present(alert, animated: true, completion: nil)
                 }
             } else {
@@ -129,7 +129,7 @@ class ListsTableViewController: UITableViewController, NewListDelegate, ItemsDel
                     present(alert, animated: true, completion: nil)
                     return
                 } catch {
-                    let alert = Status.ErrorDefault.createErrorAlert()
+                    let alert = Status.errorDefault.createErrorAlert()
                     present(alert, animated: true, completion: nil)
                     return
                 }
@@ -212,12 +212,12 @@ class ListsTableViewController: UITableViewController, NewListDelegate, ItemsDel
                 present(alert, animated: true, completion: nil)
                 return
             } catch {
-                let alert = Status.ErrorDefault.createErrorAlert()
+                let alert = Status.errorDefault.createErrorAlert()
                 present(alert, animated: true, completion: nil)
                 return
             }
         } else {
-            let alert = Status.ErrorListDelete.createErrorAlert()
+            let alert = Status.errorListDelete.createErrorAlert()
             present(alert, animated: true, completion: nil)
         }
     }
@@ -374,7 +374,7 @@ extension ListsTableViewController {
             let alert = error.createErrorAlert()
             present(alert, animated: true, completion: nil)
         } catch {
-            let alert = Status.ErrorDefault.createErrorAlert()
+            let alert = Status.errorDefault.createErrorAlert()
             present(alert, animated: true, completion: nil)
         }
     }

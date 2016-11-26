@@ -65,9 +65,9 @@ class NewItemViewController: UIViewController {
         
         // Color the segmented control
         let views = typeControl.subviews
-        views[ItemType.numberOfItems() - 1 - ItemType.Sum.getTypeIndex()].tintColor = Constants.Colors.ItemSum
-        views[ItemType.numberOfItems() - 1 - ItemType.Counter.getTypeIndex()].tintColor = Constants.Colors.ItemCounter
-        views[ItemType.numberOfItems() - 1 - ItemType.Journal.getTypeIndex()].tintColor = Constants.Colors.ItemJournal
+        views[ItemType.numberOfItems() - 1 - ItemType.sum.getTypeIndex()].tintColor = Constants.Colors.ItemSum
+        views[ItemType.numberOfItems() - 1 - ItemType.counter.getTypeIndex()].tintColor = Constants.Colors.ItemCounter
+        views[ItemType.numberOfItems() - 1 - ItemType.journal.getTypeIndex()].tintColor = Constants.Colors.ItemJournal
         
         if let item = editItem {
             createBarButton.isEnabled = true
@@ -75,9 +75,9 @@ class NewItemViewController: UIViewController {
             
             nameTextField.text = item.name
             descriptionTextField.text = item.description
-            if item.type == ItemType.Counter {
+            if item.type == ItemType.counter {
                 typeControl.selectedSegmentIndex = 1
-            } else if item.type == ItemType.Journal {
+            } else if item.type == ItemType.journal {
                 typeControl.selectedSegmentIndex = 2
             }
             dateSwitch.isOn = item.useDate
@@ -157,7 +157,7 @@ class NewItemViewController: UIViewController {
                 present(alert, animated: true, completion: nil)
                 return
             } catch {
-                let alert = Status.ErrorDefault.createErrorAlert()
+                let alert = Status.errorDefault.createErrorAlert()
                 present(alert, animated: true, completion: nil)
                 return
             }
@@ -166,7 +166,7 @@ class NewItemViewController: UIViewController {
             var itemSaved = false
             var insertIndex = -1
             do {
-                item = try Items.createItem(withName: nameTextField.text!, description: descriptionTextField.text ?? "", type: typeControl.selectedSegmentIndex == 0 ? ItemType.Sum : typeControl.selectedSegmentIndex == 1 ? ItemType.Counter : ItemType.Journal, useDate: dateSwitch.isOn, startDate: startDate, endDate: endDate)
+                item = try Items.createItem(withName: nameTextField.text!, description: descriptionTextField.text ?? "", type: typeControl.selectedSegmentIndex == 0 ? ItemType.sum : typeControl.selectedSegmentIndex == 1 ? ItemType.counter : ItemType.journal, useDate: dateSwitch.isOn, startDate: startDate, endDate: endDate)
                 try item!.saveToFile()
                 itemSaved = true
                 insertIndex = try list.insert(item: item!, atFront: insertItemAtFront)
@@ -178,7 +178,7 @@ class NewItemViewController: UIViewController {
                 present(alert, animated: true, completion: nil)
                 return
             } catch {
-                let alert = Status.ErrorDefault.createErrorAlert()
+                let alert = Status.errorDefault.createErrorAlert()
                 present(alert, animated: true, completion: nil)
                 return
             }

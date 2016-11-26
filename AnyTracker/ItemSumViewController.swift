@@ -100,7 +100,7 @@ class ItemSumViewController: UIViewController, UITableViewDelegate, UITableViewD
             self.present(alert, animated: true, completion: nil)
             return
         } catch {
-            let alert = Status.ErrorDefault.createErrorAlert()
+            let alert = Status.errorDefault.createErrorAlert()
             self.present(alert, animated: true, completion: nil)
             return
         }
@@ -168,7 +168,7 @@ class ItemSumViewController: UIViewController, UITableViewDelegate, UITableViewD
                 self.present(alert, animated: true, completion: nil)
                 return
             } catch {
-                let alert = Status.ErrorDefault.createErrorAlert()
+                let alert = Status.errorDefault.createErrorAlert()
                 self.present(alert, animated: true, completion: nil)
                 return
             }
@@ -198,7 +198,7 @@ extension ItemSumViewController {
                 }
             } catch {
                 DispatchQueue.main.async {
-                    let alert = Status.ErrorDefault.createErrorAlert()
+                    let alert = Status.errorDefault.createErrorAlert()
                     self.present(alert, animated: true, completion: nil)
                 }
             }
