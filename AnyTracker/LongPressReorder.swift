@@ -8,26 +8,30 @@
 
 import UIKit
 
+/// Defines how much does the selected row will pop out of the table when starting reordering.
 enum SelectedRowScale: CGFloat {
+    /// Selected row will barely pop out of the table.
     case small = 1.01
+    /// Selected row will visibly pop out of the table. This is the default value.
     case medium = 1.03
+    /// Selected row will scale to be considerable big comparing to the other rows of the table.
     case big = 1.05
 }
 
 /**
- Notifications that allow configuring the reorder of rows.
+ Notifications that allow configuring the reorder of rows
 */
 protocol LongPressReorder {
     
     /**
-     Will be called when the moving row changes its current position to a new position inside the table
+     Will be called when the moving row changes its current position to a new position inside the table.
      
      - Parameter currentIndex: Current position of row inside the table
      - Parameter newIndex: New position of row inside the table
      */
     func positionChanged(currentIndex: IndexPath, newIndex: IndexPath)
     /**
-     Will be called when reordering is done (long press gesture finishes)
+     Will be called when reordering is done (long press gesture finishes).
      
      - Parameter initialIndex: Initial position of row inside the table, when the long press gesture starts
      - Parameter finalIndex: Final position of row inside the table, when the long press gesture finishes
@@ -35,14 +39,14 @@ protocol LongPressReorder {
     func reorderFinished(initialIndex: IndexPath, finalIndex: IndexPath)
     
     /**
-     Specify if the current selected row should be reordered via drag and drop
+     Specify if the current selected row should be reordered via drag and drop.
      
      - Parameter atIndex: Position of row
      - Returns: True to allow selected row to be reordered, false if row should not be moved
      */
     func startReorderingRow(atIndex indexPath: IndexPath) -> Bool
     /**
-     Specify if the targeted row can change its position
+     Specify if the targeted row can change its position.
      
      - Parameter atIndex: Position of row that is allowed to be swapped
      - Returns: True to allow row to change its position, false if row is imutable
@@ -58,7 +62,7 @@ class LongPressReorderTableView {
     fileprivate(set) var tableView: UITableView
     /// Optional delegate for overriding default behaviour. Normally a subclass of UI(Table)ViewController.
     var delegate: LongPressReorder?
-    /// Controls how much the selected row will "pop out" of the table
+    /// Controls how much the selected row will "pop out" of the table.
     var selectedRowScale: SelectedRowScale
     
     /// Helper struct used to track parameters involved in drag and drop of table row
@@ -84,7 +88,7 @@ class LongPressReorderTableView {
     // MARK: - Exposed actions
     
     /**
-     Add a long press gesture recognizer to the table view, therefore enabling row reordering via drag and drop
+     Add a long press gesture recognizer to the table view, therefore enabling row reordering via drag and drop.
      */
     func enableLongPressReorder() {
         let longPress = UILongPressGestureRecognizer(target: self, action: #selector(self.longPressGestureRecognized(_:)))
@@ -220,7 +224,7 @@ extension UIViewController: LongPressReorder {
     }
     
     /**
-     Default implementation: every table row can be moved
+     Default implementation: every table row can be moved.
      
      - Parameter atIndex: Position of row
      - Returns: True to allow selected row to be reordered, false if row should not be moved
@@ -230,7 +234,7 @@ extension UIViewController: LongPressReorder {
     }
     
     /**
-     Default implementation: every table row can be swaped against the current moving row
+     Default implementation: every table row can be swaped against the current moving row.
      
      - Parameter atIndex: Position of row that is allowed to be swapped
      - Returns: True to allow row to change its position, false if row is imutable
