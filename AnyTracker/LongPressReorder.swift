@@ -8,6 +8,12 @@
 
 import UIKit
 
+enum SelectedRowScale: CGFloat {
+    case small = 1.01
+    case medium = 1.03
+    case big = 1.05
+}
+
 /**
  Notifications that allow configuring the reorder of rows.
 */
@@ -52,6 +58,8 @@ class LongPressReorderTableView {
     fileprivate(set) var tableView: UITableView
     /// Optional delegate for overriding default behaviour. Normally a subclass of UI(Table)ViewController.
     var delegate: LongPressReorder?
+    /// Controls how much the selected row will "pop out" of the table
+    var selectedRowScale: SelectedRowScale
     
     /// Helper struct used to track parameters involved in drag and drop of table row
     fileprivate struct DragInfo {
@@ -68,8 +76,9 @@ class LongPressReorderTableView {
      
      - Parameter tableView: Targeted UITableView
      */
-    init(_ tableView: UITableView) {
+    init(_ tableView: UITableView, selectedRowScale: SelectedRowScale = .medium) {
         self.tableView = tableView
+        self.selectedRowScale = selectedRowScale
     }
     
     // MARK: - Exposed actions
@@ -111,7 +120,7 @@ class LongPressReorderTableView {
                     center.y = point.y
                     DragInfo.cellAnimating = true
                     DragInfo.cellSnapshot.center = center
-                    DragInfo.cellSnapshot.transform = CGAffineTransform(scaleX: 1.03, y: 1.03)
+                    DragInfo.cellSnapshot.transform = CGAffineTransform(scaleX: self.selectedRowScale.rawValue, y: self.selectedRowScale.rawValue)
                     DragInfo.cellSnapshot.alpha = 0.95
                     
                     cell.alpha = 0

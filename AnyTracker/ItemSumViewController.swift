@@ -49,7 +49,7 @@ class ItemSumViewController: UIViewController, UITableViewDelegate, UITableViewD
         simpleKeyboard.add(control: valueTextField)
         Utils.addDoneButton(toTextField: valueTextField, forTarget: view, negativeTarget: self, negativeSelector: #selector(ItemSumViewController.negativePressed))
         
-        reorderTableView = LongPressReorderTableView(elementsTableView)
+        reorderTableView = LongPressReorderTableView(elementsTableView, selectedRowScale: SelectedRowScale.small)
         reorderTableView.delegate = self
         reorderTableView.enableLongPressReorder()
     }
