@@ -31,6 +31,9 @@ class ListsTableViewController: UITableViewController, NewListDelegate, ItemsDel
     fileprivate var selectedListIndex: Int?
     fileprivate var currentListNumItems: Int = -1
     
+    var reorderTableView: LongPressReorderTableView!
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -61,7 +64,9 @@ class ListsTableViewController: UITableViewController, NewListDelegate, ItemsDel
             }
         }
         
-        addLongPressGesture()
+        reorderTableView = LongPressReorderTableView(tableView)
+        reorderTableView.delegate = self
+        reorderTableView.enableLongPressReorder()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -343,18 +348,21 @@ class ListsTableViewController: UITableViewController, NewListDelegate, ItemsDel
             vc.prepareForDismissingController()
         }
     }
+}
 
-    // MARK: - Long press drag and drop
+// MARK: - Long press drag and drop reorder
     
-    override func changedAction() {
+extension ListsTableViewController {
+    
+    override func positionChanged(currentIndex: IndexPath, newIndex: IndexPath) {
         guard let app = app else {
             return
         }
         
-        app.lists!.exchangeList(fromIndex: DragInfo.sourceIndexPath.row - 1, toIndex: DragInfo.destinationIndexPath.row - 1)
+        app.lists!.exchangeList(fromIndex: currentIndex.row - 1, toIndex: newIndex.row - 1)
     }
     
-    override func defaultAction() {
+    override func reorderFinished(initialIndex: IndexPath, finalIndex: IndexPath) {
         guard let app = app else {
             return
         }
@@ -371,7 +379,7 @@ class ListsTableViewController: UITableViewController, NewListDelegate, ItemsDel
         }
     }
     
-    override func beganGuard(withIndex indexPath: IndexPath) -> Bool {
+    override func startReorderingRow(atIndex indexPath: IndexPath) -> Bool {
         if (indexPath as NSIndexPath).row > 0 {
             return true
         }
@@ -379,12 +387,11 @@ class ListsTableViewController: UITableViewController, NewListDelegate, ItemsDel
         return false
     }
     
-    override func changedGuard(withIndex indexPath: IndexPath) -> Bool {
+    override func allowChangingRow(atIndex indexPath: IndexPath) -> Bool {
         if (indexPath as NSIndexPath).row > 0 {
             return true
         }
         
         return false
     }
-    
 }

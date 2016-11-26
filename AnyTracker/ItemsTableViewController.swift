@@ -37,6 +37,9 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
     
     var numItems: Int = -1
     
+    fileprivate var reorderTableView: LongPressReorderTableView!
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -104,7 +107,9 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
                         }
                     }
                     
-                    self.addLongPressGesture()
+                    self.reorderTableView = LongPressReorderTableView(self.tableView)
+                    self.reorderTableView.delegate = self
+                    self.reorderTableView.enableLongPressReorder()
                 }
             }
         }
@@ -351,14 +356,16 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
     func itemChanged() {
         refreshItem = true
     }
+}
+
+// MARK: - Long press drag and drop reorder
+extension ItemsTableViewController {
     
-    // MARK: - Long press drag and drop
-    
-    override func changedAction() {
-        list!.exchangeItem(fromIndex: DragInfo.sourceIndexPath.row, toIndex: DragInfo.destinationIndexPath.row)
+    override func positionChanged(currentIndex: IndexPath, newIndex: IndexPath) {
+        list!.exchangeItem(fromIndex: currentIndex.row, toIndex: newIndex.row)
     }
     
-    override func defaultAction() {
+    override func reorderFinished(initialIndex: IndexPath, finalIndex: IndexPath) {
         // Save the new list of items IDs
         DispatchQueue.global().async {
             var alert: UIAlertController?
