@@ -145,7 +145,7 @@ class ItemSumViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         cell.viewController = self
         cell.delegate = self
-        cell.initCell(withItem: item, andElementIndex: (indexPath as NSIndexPath).row, showSeparator: numberSeparator)
+        cell.initCell(withItem: item, andElementIndex: indexPath.row, showSeparator: numberSeparator)
         
         return cell
     }
@@ -161,7 +161,7 @@ class ItemSumViewController: UIViewController, UITableViewDelegate, UITableViewD
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if (editingStyle == UITableViewCellEditingStyle.delete) {
             do {
-                try item.remove(atIndex: (indexPath as NSIndexPath).row)
+                try item.remove(atIndex: indexPath.row)
                 itemChangeDelegate?.itemChanged()
             } catch let error as Status {
                 let alert = error.createErrorAlert()

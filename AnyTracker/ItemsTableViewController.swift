@@ -169,13 +169,13 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ItemCell", for: indexPath) as! ItemCell
 
-        cell.initCell(withItem: items[(indexPath as NSIndexPath).row], separator: app?.numberSeparator ?? true, longFormat: app?.dateFormatLong ?? true)
+        cell.initCell(withItem: items[indexPath.row], separator: app?.numberSeparator ?? true, longFormat: app?.dateFormatLong ?? true)
         
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let itemID: String = items[(indexPath as NSIndexPath).row].ID
+        let itemID: String = items[indexPath.row].ID
         
         guard let type = Items.getItemType(fromID: itemID) else {
             Utils.debugLog("Can't get item type of item \(itemID) at index \(indexPath)")
@@ -202,7 +202,7 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
     }
 
     fileprivate func deleteItem(withIndexPath indexPath: IndexPath) {
-        let index = (indexPath as NSIndexPath).row
+        let index = indexPath.row
         var alert: UIAlertController?
         
         DispatchQueue.global().async {
@@ -230,7 +230,7 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
     }
     
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        let itemIndex = (indexPath as NSIndexPath).row
+        let itemIndex = indexPath.row
         
         let edit = UITableViewRowAction(style: .normal, title: "Edit") { action, index in
             let vcNav = self.storyboard!.instantiateViewController(withIdentifier: "NewItemNavigation") as! UINavigationController

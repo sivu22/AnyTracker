@@ -170,10 +170,10 @@ class ListsTableViewController: UITableViewController, NewListDelegate, ItemsDel
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell", for: indexPath) as! ListCell
     
-        if (indexPath as NSIndexPath).row == 0 {
+        if indexPath.row == 0 {
             cell.initCellWithName(Constants.Text.listAll, andItems: app?.lists?.cache?.numItemsAll ?? 0)
         } else {
-            let index = (indexPath as NSIndexPath).row - 1
+            let index = indexPath.row - 1
             cell.initCellWithName(app?.lists?.cache?.lists[index].name ?? "<Name>", andItems: app?.lists?.cache?.lists[index].numItems ?? 0)
         }
         
@@ -182,7 +182,7 @@ class ListsTableViewController: UITableViewController, NewListDelegate, ItemsDel
     
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        if (indexPath as NSIndexPath).row == 0 {
+        if indexPath.row == 0 {
             return false
         }
         
@@ -223,13 +223,13 @@ class ListsTableViewController: UITableViewController, NewListDelegate, ItemsDel
     }
     
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        let listIndex = (indexPath as NSIndexPath).row - 1
+        let listIndex = indexPath.row - 1
         
         let edit = UITableViewRowAction(style: .normal, title: "Edit") { action, index in
             let vc = self.storyboard!.instantiateViewController(withIdentifier: "NewList") as! NewListViewController
             vc.delegate = self
             vc.listName = self.app?.lists!.cache?.lists[listIndex].name ?? ""
-            self.editListIndex = (indexPath as NSIndexPath).row - 1
+            self.editListIndex = indexPath.row - 1
             self.present(vc, animated: true, completion: nil)
             
             self.tableView.setEditing(false, animated: true)
@@ -275,7 +275,7 @@ class ListsTableViewController: UITableViewController, NewListDelegate, ItemsDel
     
     // Override to support conditional rearranging of the table view.
     override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        if (indexPath as NSIndexPath).row == 0 {
+        if indexPath.row == 0 {
             return false
         }
         
@@ -380,7 +380,7 @@ extension ListsTableViewController {
     }
     
     override func startReorderingRow(atIndex indexPath: IndexPath) -> Bool {
-        if (indexPath as NSIndexPath).row > 0 {
+        if indexPath.row > 0 {
             return true
         }
         
@@ -388,7 +388,7 @@ extension ListsTableViewController {
     }
     
     override func allowChangingRow(atIndex indexPath: IndexPath) -> Bool {
-        if (indexPath as NSIndexPath).row > 0 {
+        if indexPath.row > 0 {
             return true
         }
         

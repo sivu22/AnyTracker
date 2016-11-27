@@ -147,7 +147,7 @@ class ItemJournalViewController: UIViewController, UITableViewDelegate, UITableV
         
         cell.viewController = self
         cell.delegate = self
-        cell.initCell(withItem: item, andEntryIndex: (indexPath as NSIndexPath).row, longDateFormat: longDateFormat)
+        cell.initCell(withItem: item, andEntryIndex: indexPath.row, longDateFormat: longDateFormat)
         
         return cell
     }
@@ -163,7 +163,7 @@ class ItemJournalViewController: UIViewController, UITableViewDelegate, UITableV
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if (editingStyle == UITableViewCellEditingStyle.delete) {
             do {
-                try item.remove(atIndex: (indexPath as NSIndexPath).row)
+                try item.remove(atIndex: indexPath.row)
                 itemChangeDelegate?.itemChanged()
             } catch let error as Status {
                 let alert = error.createErrorAlert()
