@@ -10,6 +10,8 @@ import UIKit
 
 /// Defines how much does the selected row will pop out of the table when starting reordering.
 enum SelectedRowScale: CGFloat {
+    /// Selected row will pop out without scaling at all
+    case none = 1.00
     /// Selected row will barely pop out of the table.
     case small = 1.01
     /// Selected row will visibly pop out of the table. This is the default value.
@@ -79,6 +81,7 @@ class LongPressReorderTableView {
      Single designated initializer
      
      - Parameter tableView: Targeted UITableView
+     - Parameter selectedRowScale: defines how big the cell's pop out effect will be
      */
     init(_ tableView: UITableView, selectedRowScale: SelectedRowScale = .medium) {
         self.tableView = tableView
@@ -203,6 +206,9 @@ class LongPressReorderTableView {
 
 // MARK: - Default implementation of LongPressReorder notifications
 
+/**
+ Extension that implements default behaviour for LongPressReorder notifications
+ */
 extension UIViewController: LongPressReorder {
     
     /**
