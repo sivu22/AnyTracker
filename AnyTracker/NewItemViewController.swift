@@ -40,7 +40,7 @@ class NewItemViewController: UIViewController {
     
     var editItem: Item?
     
-    var startDateEditing = false
+    var editingStartDate = false
     
     var startDate: Date!
     var endDate: Date!
@@ -213,8 +213,8 @@ class NewItemViewController: UIViewController {
     }
     
     func datePickerValueChange(_ sender: UIDatePicker) {
-        let dateString = Utils.stringFrom(date: sender.date, startDate: startDateEditing, longFormat: longDateFormat)
-        if startDateEditing {
+        let dateString = Utils.stringFrom(date: sender.date, startDate: editingStartDate, longFormat: longDateFormat)
+        if editingStartDate {
             startDate = sender.date
             startDateTextField.text = dateString
         } else {
@@ -224,7 +224,7 @@ class NewItemViewController: UIViewController {
     }
     
     @IBAction func startDateEditing(_ sender: UITextField) {
-        startDateEditing = true
+        editingStartDate = true
         
         let (minDate, _) = minMaxDate
         
@@ -240,7 +240,7 @@ class NewItemViewController: UIViewController {
     }
     
     @IBAction func endDateEditing(_ sender: UITextField) {
-        startDateEditing = false
+        editingStartDate = false
         
         let (_, maxDate) = minMaxDate
         
