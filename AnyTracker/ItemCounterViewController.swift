@@ -38,42 +38,42 @@ class ItemCounterViewController: UIViewController, NotifyItemUpdate {
     // MARK: - Actions
     
     @IBAction func incPressed(_ sender: UIButton) {
-        do {
-            try item.changeCounter(byIncreasing: true)
-            itemChangeDelegate?.itemChanged()
-            UIView.transition(with: counterLabel, duration: 0.25, options: .transitionCrossDissolve, animations: {
-                    self.counterLabel.text = self.item.counter.asString(withSeparator: self.numberSeparator)
-                }, completion: nil)
-        }  catch let error as Status {
-            let alert = error.createErrorAlert()
-            present(alert, animated: true, completion: nil)
-        } catch {
-            let alert = Status.errorDefault.createErrorAlert()
-            present(alert, animated: true, completion: nil)
-        }
-        
-        if !decButton.isEnabled {
-            decButton.isEnabled = true
+        item.changeCounter(byIncreasing: true) { error in
+            if let error = error {
+                let alert = error.createErrorAlert()
+                self.present(alert, animated: true, completion: nil)
+                
+                return
+            }
+            
+            self.itemChangeDelegate?.itemChanged()
+            UIView.transition(with: self.counterLabel, duration: 0.25, options: .transitionCrossDissolve, animations: {
+                self.counterLabel.text = self.item.counter.asString(withSeparator: self.numberSeparator)
+            }, completion: nil)
+            
+            if !self.decButton.isEnabled {
+                self.decButton.isEnabled = true
+            }
         }
     }
     
     @IBAction func decPressed(_ sender: UIButton) {
-        do {
-            try item.changeCounter(byIncreasing: false)
-            itemChangeDelegate?.itemChanged()
-            UIView.transition(with: counterLabel, duration: 0.25, options: .transitionCrossDissolve, animations: {
-                    self.counterLabel.text = self.item.counter.asString(withSeparator: self.numberSeparator)
-                }, completion: nil)
-        }  catch let error as Status {
-            let alert = error.createErrorAlert()
-            present(alert, animated: true, completion: nil)
-        } catch {
-            let alert = Status.errorDefault.createErrorAlert()
-            present(alert, animated: true, completion: nil)
-        }
-        
-        if item.counter == 0 {
-            decButton.isEnabled = false
+        item.changeCounter(byIncreasing: false) { error in
+            if let error = error {
+                let alert = error.createErrorAlert()
+                self.present(alert, animated: true, completion: nil)
+                
+                return
+            }
+            
+            self.itemChangeDelegate?.itemChanged()
+            UIView.transition(with: self.counterLabel, duration: 0.25, options: .transitionCrossDissolve, animations: {
+                self.counterLabel.text = self.item.counter.asString(withSeparator: self.numberSeparator)
+            }, completion: nil)
+            
+            if self.item.counter == 0 {
+                self.decButton.isEnabled = false
+            }
         }
     }
 }

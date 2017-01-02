@@ -52,16 +52,11 @@ class ItemSumCell: UITableViewCell, UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         
-        do {
-            try item.updateElement(atIndex: elementIndex, newName: textField.text!, newValue: item.elements[elementIndex].value)
-        } catch let error as Status {
-            let alert = error.createErrorAlert()
-            viewController?.present(alert, animated: true, completion: nil)
-            return true
-        } catch {
-            let alert = Status.errorDefault.createErrorAlert()
-            viewController?.present(alert, animated: true, completion: nil)
-            return true
+        item.updateElement(atIndex: elementIndex, newName: textField.text!, newValue: item.elements[elementIndex].value) { error in
+            if let error = error {
+                let alert = error.createErrorAlert()
+                self.viewController?.present(alert, animated: true, completion: nil)
+            }
         }
         
         return true
@@ -98,19 +93,19 @@ class ItemSumCell: UITableViewCell, UITextFieldDelegate {
             sender.text = "0"
         }
         
-        do {
-            try item.updateElement(atIndex: elementIndex, newName: item.elements[elementIndex].name, newValue: newValue)
-            valueTextField.text = item.elements[elementIndex].value.asString(withSeparator: numberSeparator)
-        } catch let error as Status {
-            let alert = error.createErrorAlert()
-            viewController?.present(alert, animated: true, completion: nil)
-        } catch {
-            let alert = Status.errorDefault.createErrorAlert()
-            viewController?.present(alert, animated: true, completion: nil)
+        item.updateElement(atIndex: elementIndex, newName: item.elements[elementIndex].name, newValue: newValue) { error in
+            if let error = error {
+                let alert = error.createErrorAlert()
+                self.viewController?.present(alert, animated: true, completion: nil)
+                
+                return
+            }
+            
+            self.valueTextField.text = self.item.elements[self.elementIndex].value.asString(withSeparator: self.numberSeparator)
+            
+            self.viewController?.sumLabel.text = self.item.sum.asString(withSeparator: self.numberSeparator)
+            self.viewController?.itemChangeDelegate?.itemChanged()
         }
-        
-        viewController?.sumLabel.text = item.sum.asString(withSeparator: numberSeparator)
-        viewController?.itemChangeDelegate?.itemChanged()
     }
     
     func negativePressed() {

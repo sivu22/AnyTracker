@@ -78,9 +78,10 @@ class ItemJournal: Item, ItemTypeJournal {
         Utils.debugLog("Successfully removed entry from Journal item \(ID)")
     }
     
-    func updateEntry(atIndex index: Int, newName name: String, newValue value: Date) throws {
+    func updateEntry(atIndex index: Int, newName name: String, newValue value: Date, completionHandler: @escaping (Status?) -> Void) {
         if index < 0 || index >= entries.count {
-            throw Status.errorIndex
+            completionHandler(Status.errorIndex)
+            return
         }
         
         if entries[index].name == name && entries[index].value == value {
@@ -91,17 +92,26 @@ class ItemJournal: Item, ItemTypeJournal {
         let new = Entry(name: name, value: value)
         entries[index] = new
         
-        do {
-            try saveToFile()
-        } catch {
-            entries[index] = old
-            if let statusError = error as? Status {
-                throw statusError
+        DispatchQueue.global().async {
+            var completionError: Status?
+            do {
+                try self.saveToFile()
+            } catch {
+                self.entries[index] = old
+                if let statusError = error as? Status {
+                    completionError = statusError
+                } else {
+                    completionError = Status.errorDefault
+                }
             }
-            throw Status.errorDefault
+            
+            DispatchQueue.main.async {
+                if completionError != nil {
+                    Utils.debugLog("Successfully updated entry of Journal item \(self.ID)")
+                }
+                completionHandler(completionError)
+            }
         }
-        
-        Utils.debugLog("Successfully updated entry of Journal item \(ID)")
     }
     
     func exchangeEntry(fromIndex src: Int, toIndex dst: Int) {

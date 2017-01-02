@@ -58,14 +58,11 @@ class ItemJournalCell: UITableViewCell, UITextFieldDelegate, UITextViewDelegate 
             return
         }
         
-        do {
-            try item.updateEntry(atIndex: entryIndex, newName: nameTextView.text!, newValue: valueDate)
-        } catch let error as Status {
-            let alert = error.createErrorAlert()
-            viewController?.present(alert, animated: true, completion: nil)
-        } catch {
-            let alert = Status.errorDefault.createErrorAlert()
-            viewController?.present(alert, animated: true, completion: nil)
+        item.updateEntry(atIndex: entryIndex, newName: nameTextView.text!, newValue: valueDate) { error in
+            if let error = error {
+                let alert = error.createErrorAlert()
+                self.viewController?.present(alert, animated: true, completion: nil)
+            }
         }
     }
     

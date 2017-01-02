@@ -84,9 +84,10 @@ class ItemSum: Item, ItemTypeSum {
         Utils.debugLog("Successfully removed element from Sum item \(ID)")
     }
     
-    func updateElement(atIndex index: Int, newName name: String, newValue value: Double) throws {
+    func updateElement(atIndex index: Int, newName name: String, newValue value: Double, completionHandler: @escaping (Status?) -> Void) {
         if index < 0 || index >= elements.count {
-            throw Status.errorIndex
+            completionHandler(Status.errorIndex)
+            return
         }
         
         if elements[index].name == name && elements[index].value == value {
@@ -99,19 +100,26 @@ class ItemSum: Item, ItemTypeSum {
         sum += new.value
         elements[index] = new
         
-        do {
-            try saveToFile()
-        } catch {
-            elements[index] = old
-            sum -= new.value
-            sum += old.value
-            if let statusError = error as? Status {
-                throw statusError
+        DispatchQueue.global().async {
+            var completionError: Status?
+            do {
+                try self.saveToFile()
+            } catch {
+                self.elements[index] = old
+                self.sum -= new.value
+                self.sum += old.value
+                if let statusError = error as? Status {
+                    completionError = statusError
+                }
             }
-            throw Status.errorDefault
+            
+            DispatchQueue.main.async {
+                if completionError != nil {
+                    Utils.debugLog("Successfully updated element of Sum item \(self.ID)")
+                }
+                completionHandler(completionError)
+            }
         }
-        
-        Utils.debugLog("Successfully updated element of Sum item \(ID)")
     }
     
     func exchangeElement(fromIndex src: Int, toIndex dst: Int) {

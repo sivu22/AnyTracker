@@ -41,7 +41,7 @@ class ItemCounter: Item, ItemTypeCounter {
         return toJSONString()
     }
     
-    func changeCounter(byIncreasing increasing: Bool) throws {
+    func changeCounter(byIncreasing increasing: Bool, completionHandler: @escaping (Status?) -> Void) {
         let oldCounter = counter
         if increasing {
             counter += 1
@@ -49,17 +49,25 @@ class ItemCounter: Item, ItemTypeCounter {
             counter -= 1
         }
         
-        do {
-            try saveToFile()
-        } catch let error as Status {
-            counter = oldCounter
-            throw error
-        } catch {
-            counter = oldCounter
-            throw Status.errorDefault
+        DispatchQueue.global().async {
+            var completionError: Status?
+            do {
+                try self.saveToFile()
+            } catch let error as Status {
+                self.counter = oldCounter
+                completionError = error
+            } catch {
+                self.counter = oldCounter
+                completionError = Status.errorDefault
+            }
+            
+            DispatchQueue.main.async {
+                if completionError != nil {
+                    Utils.debugLog("Successfully changed the Counter item \(self.ID)")
+                }
+                completionHandler(completionError)
+            }
         }
-        
-        Utils.debugLog("Successfully changed the Counter item \(ID)")
     }
     
     // MARK: -
