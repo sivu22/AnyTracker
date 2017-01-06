@@ -93,22 +93,21 @@ class ItemJournalViewController: UIViewController, UITableViewDelegate, UITableV
     
     @IBAction func addPressed(_ sender: UIButton) {
         let entry = Entry(name: nameTextField.text!, value: valueDate)
-        do {
-            try item.insert(entry: entry)
-            itemChangeDelegate?.itemChanged()
-        } catch let error as Status {
-            let alert = error.createErrorAlert()
-            self.present(alert, animated: true, completion: nil)
-            return
-        } catch {
-            let alert = Status.errorDefault.createErrorAlert()
-            self.present(alert, animated: true, completion: nil)
-            return
+        item.insert(entry: entry) { error in
+            if let error = error {
+                let alert = error.createErrorAlert()
+                self.present(alert, animated: true, completion: nil)
+                
+                return
+            }
+            
+            //Utils.debugLog("Successfully added entry of Journal item \(self.item.ID)")
+            
+            self.itemChangeDelegate?.itemChanged()
+            self.entriesTableView.beginUpdates()
+            self.entriesTableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: UITableViewRowAnimation.right)
+            self.entriesTableView.endUpdates()
         }
-        
-        entriesTableView.beginUpdates()
-        entriesTableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: UITableViewRowAnimation.right)
-        entriesTableView.endUpdates()
     }
     
     @IBAction func nameChanged(_ sender: UITextField) {
@@ -162,20 +161,24 @@ class ItemJournalViewController: UIViewController, UITableViewDelegate, UITableV
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if (editingStyle == UITableViewCellEditingStyle.delete) {
-            do {
-                try item.remove(atIndex: indexPath.row)
-                itemChangeDelegate?.itemChanged()
-            } catch let error as Status {
-                let alert = error.createErrorAlert()
-                self.present(alert, animated: true, completion: nil)
-                return
-            } catch {
-                let alert = Status.errorDefault.createErrorAlert()
-                self.present(alert, animated: true, completion: nil)
-                return
+            item.remove(atIndex: indexPath.row) { error in
+                if let error = error {
+                    let alert = error.createErrorAlert()
+                    self.present(alert, animated: true, completion: nil)
+                    
+                    return
+                }
+                
+                //Utils.debugLog("Successfully removed entry of Journal item \(self.item.ID)")
+                
+                self.itemChangeDelegate?.itemChanged()
+                CATransaction.begin()
+                CATransaction.setCompletionBlock({() in tableView.reloadData() })
+                tableView.beginUpdates()
+                tableView.deleteRows(at: [indexPath], with: .fade)
+                tableView.endUpdates()
+                CATransaction.commit()
             }
-            
-            tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
 }

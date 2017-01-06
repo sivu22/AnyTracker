@@ -41,41 +41,54 @@ class ItemJournal: Item, ItemTypeJournal {
         return toJSONString()
     }
     
-    func insert(entry: Entry) throws {
+    func insert(entry: Entry, completionHandler: @escaping (Status?) -> Void) {
         entries.insert(entry, at: 0)
         
-        do {
-            try saveToFile()
-        } catch {
-            entries.removeFirst()
-            if let statusError = error as? Status {
-                throw statusError
+        DispatchQueue.global().async {
+            var completionError: Status?
+            do {
+                try self.saveToFile()
+            } catch {
+                self.entries.removeFirst()
+                if let statusError = error as? Status {
+                    completionError = statusError
+                } else {
+                    completionError = Status.errorDefault
+                }
             }
-            throw Status.errorDefault
+            
+            DispatchQueue.main.async {
+                completionHandler(completionError)
+            }
         }
-        
-        Utils.debugLog("Successfully added entry to Journal item \(ID)")
     }
     
-    func remove(atIndex index: Int) throws {
+    func remove(atIndex index: Int, completionHandler: @escaping (Status?) -> Void) {
         if index < 0 || index >= entries.count {
-            throw Status.errorIndex
+            completionHandler(Status.errorIndex)
+            return
         }
         
         let deleted = Entry(name: entries[index].name, value: entries[index].value)
         entries.remove(at: index)
         
-        do {
-            try saveToFile()
-        } catch {
-            entries.append(deleted)
-            if let statusError = error as? Status {
-                throw statusError
+        DispatchQueue.global().async {
+            var completionError: Status?
+            do {
+                try self.saveToFile()
+            } catch {
+                self.entries.append(deleted)
+                if let statusError = error as? Status {
+                    completionError = statusError
+                } else {
+                    completionError = Status.errorDefault
+                }
             }
-            throw Status.errorDefault
+            
+            DispatchQueue.main.async {
+                completionHandler(completionError)
+            }
         }
-        
-        Utils.debugLog("Successfully removed entry from Journal item \(ID)")
     }
     
     func updateEntry(atIndex index: Int, newName name: String, newValue value: Date, completionHandler: @escaping (Status?) -> Void) {
@@ -106,9 +119,6 @@ class ItemJournal: Item, ItemTypeJournal {
             }
             
             DispatchQueue.main.async {
-                if completionError != nil {
-                    Utils.debugLog("Successfully updated entry of Journal item \(self.ID)")
-                }
                 completionHandler(completionError)
             }
         }

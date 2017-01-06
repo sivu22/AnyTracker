@@ -62,6 +62,8 @@ class ItemJournalCell: UITableViewCell, UITextFieldDelegate, UITextViewDelegate 
             if let error = error {
                 let alert = error.createErrorAlert()
                 self.viewController?.present(alert, animated: true, completion: nil)
+            } else {
+                //Utils.debugLog("Successfully updated entry of Journal item \(self.item.ID)")
             }
         }
     }

@@ -92,23 +92,24 @@ class ItemSumViewController: UIViewController, UITableViewDelegate, UITableViewD
     @IBAction func addPressed(_ sender: AnyObject) {
         let correctString = valueTextField.text!.replacingOccurrences(of: ",", with: ".")
         let element = Element(name: nameTextField.text!, value: Double(correctString)!)
-        do {
-            try item.insert(element: element)
-            itemChangeDelegate?.itemChanged()
-        } catch let error as Status {
-            let alert = error.createErrorAlert()
-            self.present(alert, animated: true, completion: nil)
-            return
-        } catch {
-            let alert = Status.errorDefault.createErrorAlert()
-            self.present(alert, animated: true, completion: nil)
-            return
+        
+        item.insert(element: element) { error in
+            if let error = error {
+                let alert = error.createErrorAlert()
+                self.present(alert, animated: true, completion: nil)
+                
+                return
+            }
+            
+            //Utils.debugLog("Successfully added element of Sum item \(self.item.ID)")
+            
+            self.itemChangeDelegate?.itemChanged()
+            
+            self.sumLabel.text = self.item.sum.asString(withSeparator: self.numberSeparator)
+            self.elementsTableView.beginUpdates()
+            self.elementsTableView.insertRows(at: [IndexPath(row: self.item.elements.count - 1, section: 0)], with: UITableViewRowAnimation.right)
+            self.elementsTableView.endUpdates()
         }
-    
-        sumLabel.text = item.sum.asString(withSeparator: numberSeparator)
-        elementsTableView.beginUpdates()
-        elementsTableView.insertRows(at: [IndexPath(row: item.elements.count - 1, section: 0)], with: UITableViewRowAnimation.right)
-        elementsTableView.endUpdates()
     }
     
     @IBAction func valueChanged(_ sender: AnyObject) {
@@ -160,21 +161,26 @@ class ItemSumViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if (editingStyle == UITableViewCellEditingStyle.delete) {
-            do {
-                try item.remove(atIndex: indexPath.row)
-                itemChangeDelegate?.itemChanged()
-            } catch let error as Status {
-                let alert = error.createErrorAlert()
-                self.present(alert, animated: true, completion: nil)
-                return
-            } catch {
-                let alert = Status.errorDefault.createErrorAlert()
-                self.present(alert, animated: true, completion: nil)
-                return
+            item.remove(atIndex: indexPath.row) { error in
+                if let error = error {
+                    let alert = error.createErrorAlert()
+                    self.present(alert, animated: true, completion: nil)
+                    
+                    return
+                }
+                
+                //Utils.debugLog("Successfully removed element of Sum item \(self.item.ID)")
+                
+                self.itemChangeDelegate?.itemChanged()
+                
+                self.sumLabel.text = self.item.sum.asString(withSeparator: self.numberSeparator)
+                CATransaction.begin()
+                CATransaction.setCompletionBlock({() in tableView.reloadData() })
+                tableView.beginUpdates()
+                tableView.deleteRows(at: [indexPath], with: .fade)
+                tableView.endUpdates()
+                CATransaction.commit()
             }
-            
-            sumLabel.text = item.sum.asString(withSeparator: numberSeparator)
-            tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
 }
@@ -189,16 +195,17 @@ extension ItemSumViewController {
     
     override func reorderFinished(initialIndex: IndexPath, finalIndex: IndexPath) {
         DispatchQueue.global().async {
+            var alert: UIAlertController?
             do {
                 try self.item.saveToFile()
             } catch let error as Status {
-                DispatchQueue.main.async {
-                    let alert = error.createErrorAlert()
-                    self.present(alert, animated: true, completion: nil)
-                }
+                alert = error.createErrorAlert()
             } catch {
-                DispatchQueue.main.async {
-                    let alert = Status.errorDefault.createErrorAlert()
+                alert = Status.errorDefault.createErrorAlert()
+            }
+            
+            DispatchQueue.main.async {
+                if let alert = alert {
                     self.present(alert, animated: true, completion: nil)
                 }
             }

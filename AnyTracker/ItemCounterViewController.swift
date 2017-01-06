@@ -46,6 +46,8 @@ class ItemCounterViewController: UIViewController, NotifyItemUpdate {
                 return
             }
             
+            //Utils.debugLog("Successfully changed the Counter item \(self.item.ID)")
+            
             self.itemChangeDelegate?.itemChanged()
             UIView.transition(with: self.counterLabel, duration: 0.25, options: .transitionCrossDissolve, animations: {
                 self.counterLabel.text = self.item.counter.asString(withSeparator: self.numberSeparator)
@@ -65,6 +67,8 @@ class ItemCounterViewController: UIViewController, NotifyItemUpdate {
                 
                 return
             }
+            
+            //Utils.debugLog("Successfully changed the Counter item \(self.item.ID)")
             
             self.itemChangeDelegate?.itemChanged()
             UIView.transition(with: self.counterLabel, duration: 0.25, options: .transitionCrossDissolve, animations: {

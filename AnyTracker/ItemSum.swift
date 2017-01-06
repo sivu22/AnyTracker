@@ -43,45 +43,58 @@ class ItemSum: Item, ItemTypeSum {
         return toJSONString()
     }
     
-    func insert(element: Element) throws {
+    func insert(element: Element, completionHandler: @escaping (Status?) -> Void) {
         elements.append(element)
         sum += element.value
         
-        do {
-            try saveToFile()
-        } catch {
-            elements.removeLast()
-            sum -= element.value
-            if let statusError = error as? Status {
-                throw statusError
+        DispatchQueue.global().async {
+            var completionError: Status?
+            do {
+                try self.saveToFile()
+            } catch {
+                self.elements.removeLast()
+                self.sum -= element.value
+                if let statusError = error as? Status {
+                    completionError = statusError
+                } else {
+                    completionError = Status.errorDefault
+                }
             }
-            throw Status.errorDefault
+            
+            DispatchQueue.main.async {
+                completionHandler(completionError)
+            }
         }
-        
-        Utils.debugLog("Successfully added element to Sum item \(ID)")
     }
     
-    func remove(atIndex index: Int) throws {
+    func remove(atIndex index: Int, completionHandler: @escaping (Status?) -> Void) {
         if index < 0 || index >= elements.count {
-            throw Status.errorIndex
+            completionHandler(Status.errorIndex)
+            return
         }
         
         let deleted = Element(name: elements[index].name, value: elements[index].value)
         sum -= elements[index].value
         elements.remove(at: index)
         
-        do {
-            try saveToFile()
-        } catch {
-            elements.append(deleted)
-            sum += deleted.value
-            if let statusError = error as? Status {
-                throw statusError
+        DispatchQueue.global().async {
+            var completionError: Status?
+            do {
+                try self.saveToFile()
+            } catch {
+                self.elements.append(deleted)
+                self.sum += deleted.value
+                if let statusError = error as? Status {
+                    completionError = statusError
+                } else {
+                    completionError = Status.errorDefault
+                }
             }
-            throw Status.errorDefault
+            
+            DispatchQueue.main.async {
+                completionHandler(completionError)
+            }
         }
-        
-        Utils.debugLog("Successfully removed element from Sum item \(ID)")
     }
     
     func updateElement(atIndex index: Int, newName name: String, newValue value: Double, completionHandler: @escaping (Status?) -> Void) {
@@ -114,9 +127,6 @@ class ItemSum: Item, ItemTypeSum {
             }
             
             DispatchQueue.main.async {
-                if completionError != nil {
-                    Utils.debugLog("Successfully updated element of Sum item \(self.ID)")
-                }
                 completionHandler(completionError)
             }
         }

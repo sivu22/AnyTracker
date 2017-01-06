@@ -62,9 +62,6 @@ class ItemCounter: Item, ItemTypeCounter {
             }
             
             DispatchQueue.main.async {
-                if completionError != nil {
-                    Utils.debugLog("Successfully changed the Counter item \(self.ID)")
-                }
                 completionHandler(completionError)
             }
         }

@@ -222,6 +222,7 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
                 }
                 
                 self.numItems -= 1
+                self.items.remove(at: index)
                 self.delegate?.numItemsChange(increased: false)
                 
                 self.tableView.deleteRows(at: [indexPath], with: .fade)

@@ -56,7 +56,9 @@ class ItemSumCell: UITableViewCell, UITextFieldDelegate {
             if let error = error {
                 let alert = error.createErrorAlert()
                 self.viewController?.present(alert, animated: true, completion: nil)
-            }
+            } /*else {
+                Utils.debugLog("Successfully updated element of Sum item \(self.item.ID)")
+            }*/
         }
         
         return true
@@ -101,6 +103,7 @@ class ItemSumCell: UITableViewCell, UITextFieldDelegate {
                 return
             }
             
+            //Utils.debugLog("Successfully updated element of Sum item \(self.item.ID)")
             self.valueTextField.text = self.item.elements[self.elementIndex].value.asString(withSeparator: self.numberSeparator)
             
             self.viewController?.sumLabel.text = self.item.sum.asString(withSeparator: self.numberSeparator)
