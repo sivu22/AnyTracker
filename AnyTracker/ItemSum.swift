@@ -161,7 +161,7 @@ extension ItemSum: JSON {
         dict["elements"] = arrayElements as JSONObject?
         
         let jsonString = Utils.getJSONFromObject(dict as JSONObject?)
-        Utils.debugLog("Serialized sum item to JSON string \(jsonString)")
+        Utils.debugLog("Serialized sum item to JSON string \(String(describing: jsonString))")
         
         return jsonString
     }

@@ -185,7 +185,7 @@ extension List: JSON {
         dict["items"] = items as JSONObject?
         
         let jsonString = Utils.getJSONFromObject(dict as JSONObject?)
-        Utils.debugLog("Serialized list to JSON string \(jsonString)")
+        Utils.debugLog("Serialized list to JSON string \(String(describing: jsonString))")
         
         return jsonString
     }

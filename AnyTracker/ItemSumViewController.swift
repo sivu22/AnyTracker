@@ -126,7 +126,7 @@ class ItemSumViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
     
-    func negativePressed() {
+    @objc func negativePressed() {
         let valueText = valueTextField.text!
         if valueText.characters.first == "-" {
             valueTextField.text = String(valueText.characters.dropFirst())

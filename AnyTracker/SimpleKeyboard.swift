@@ -168,7 +168,7 @@ extension SimpleKeyboard {
 
 extension SimpleKeyboard {
     
-    func keyboardWillShow(_ notification: NSNotification) {
+    @objc func keyboardWillShow(_ notification: NSNotification) {
         var keyboardHeight: CGFloat = 0
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             keyboardHeight = keyboardSize.height
@@ -200,7 +200,7 @@ extension SimpleKeyboard {
         }
     }
     
-    func keyboardWillHide(_ notification: NSNotification) {
+    @objc func keyboardWillHide(_ notification: NSNotification) {
         if viewOffset != 0 {
             adaptView(moveUp: false)
             viewOffset = 0

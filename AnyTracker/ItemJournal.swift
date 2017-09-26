@@ -152,7 +152,7 @@ extension ItemJournal: JSON {
         dict["entries"] = arrayEntries as JSONObject?
         
         let jsonString = Utils.getJSONFromObject(dict as JSONObject?)
-        Utils.debugLog("Serialized journal item to JSON string \(jsonString)")
+        Utils.debugLog("Serialized journal item to JSON string \(String(describing: jsonString))")
         
         return jsonString
     }

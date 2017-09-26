@@ -79,7 +79,7 @@ extension ItemCounter: JSON {
         dict["counter"] = counter as JSONObject?
         
         let jsonString = Utils.getJSONFromObject(dict as JSONObject?)
-        Utils.debugLog("Serialized counter item to JSON string \(jsonString)")
+        Utils.debugLog("Serialized counter item to JSON string \(String(describing: jsonString))")
         
         return jsonString
     }

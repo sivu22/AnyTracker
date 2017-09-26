@@ -228,7 +228,7 @@ extension Lists: JSON {
     
     func toJSONString() -> String? {
         let jsonString = Utils.getJSONFromObject(listsData as JSONObject)
-        Utils.debugLog("Serialized lists to JSON string \(jsonString)")
+        Utils.debugLog("Serialized lists to JSON string \(String(describing: jsonString))")
         
         return jsonString
     }

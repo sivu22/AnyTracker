@@ -212,7 +212,7 @@ class NewItemViewController: UIViewController {
         }
     }
     
-    func datePickerValueChange(_ sender: UIDatePicker) {
+    @objc func datePickerValueChange(_ sender: UIDatePicker) {
         let dateString = Utils.stringFrom(date: sender.date, startDate: editingStartDate, longFormat: longDateFormat)
         if editingStartDate {
             startDate = sender.date

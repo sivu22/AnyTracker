@@ -111,12 +111,12 @@ struct Utils {
         
         let fileManager = FileManager.default
         if !overwrite && fileManager.fileExists(atPath: path!) {
-            debugLog("File \(path) already exists")
+            debugLog("File \(String(describing: path)) already exists")
             return false
         }
         
         if !fileManager.createFile(atPath: path!, contents: nil, attributes: nil) {
-            debugLog("Failed to create file \(path)")
+            debugLog("Failed to create file \(String(describing: path))")
             return false
         }
         
@@ -124,7 +124,7 @@ struct Utils {
             do {
                 try content!.write(toFile: path!, atomically: true, encoding: String.Encoding.utf8)
             } catch let error as NSError {
-                debugLog("Couldn't write to \(path)! error " + errorInfo(error))
+                debugLog("Couldn't write to \(String(describing: path))! error " + errorInfo(error))
                 return false
             }
         }
@@ -161,7 +161,7 @@ struct Utils {
     
     static func deleteFile(atPath path: String?) -> Bool {
         guard fileExists(atPath: path) else {
-            debugLog("File \(path) doesn't exist")
+            debugLog("File \(String(describing: path)) doesn't exist")
             return false
         }
         
@@ -169,7 +169,7 @@ struct Utils {
         do {
             try fileManager.removeItem(atPath: path!)
         } catch let error as NSError {
-            debugLog("Failed to delete file \(path)! error " + errorInfo(error))
+            debugLog("Failed to delete file \(String(describing: path))! error " + errorInfo(error))
             return false
         }
         

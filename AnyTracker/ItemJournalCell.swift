@@ -47,7 +47,7 @@ class ItemJournalCell: UITableViewCell, UITextFieldDelegate, UITextViewDelegate 
         Utils.addDoneButton(toTextView: nameTextView, forTarget: self, doneSelector: #selector(ItemJournalCell.donePressed))
     }
     
-    func donePressed() {
+    @objc func donePressed() {
         if valueTextField.isFirstResponder {
             valueTextField.resignFirstResponder()
         } else {
@@ -93,7 +93,7 @@ class ItemJournalCell: UITableViewCell, UITextFieldDelegate, UITextViewDelegate 
         return true
     }
     
-    func datePickerValueChange(_ sender: UIDatePicker) {
+    @objc func datePickerValueChange(_ sender: UIDatePicker) {
         valueDate = sender.date
         let dateString = Utils.stringFrom(date: sender.date, longFormat: longDateFormat)
         valueTextField.text = dateString

@@ -118,7 +118,7 @@ class ItemJournalViewController: UIViewController, UITableViewDelegate, UITableV
         }
     }
     
-    func datePickerValueChange(_ sender: UIDatePicker) {
+    @objc func datePickerValueChange(_ sender: UIDatePicker) {
         valueDate = sender.date
         let dateString = Utils.stringFrom(date: sender.date, longFormat: longDateFormat)
         valueTextField.text = dateString
