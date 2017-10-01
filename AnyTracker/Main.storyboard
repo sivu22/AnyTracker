@@ -948,7 +948,7 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
-                            <tableViewSection headerTitle="AnyTracker 1.0.0" footerTitle="Copyright (C) 2016 Cristian Sava" id="xJs-8R-w4T" userLabel="About">
+                            <tableViewSection headerTitle="AnyTracker 1.0.0" footerTitle="Copyright (C) 2016, 2017 Cristian Sava" id="xJs-8R-w4T" userLabel="About">
                                 <cells/>
                             </tableViewSection>
                         </sections>
