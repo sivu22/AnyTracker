@@ -104,10 +104,10 @@ class ItemJournalCell: UITableViewCell, UITextFieldDelegate, UITextViewDelegate 
     @IBAction func valueDateEditing(_ sender: UITextField) {
         let datePickerView: UIDatePicker = UIDatePicker()
         datePickerView.backgroundColor = UIColor.white
-        datePickerView.datePickerMode = UIDatePickerMode.date
+        datePickerView.datePickerMode = UIDatePicker.Mode.date
         datePickerView.date = valueDate
         
         sender.inputView = datePickerView
-        datePickerView.addTarget(self, action: #selector(self.datePickerValueChange), for: UIControlEvents.valueChanged)
+        datePickerView.addTarget(self, action: #selector(self.datePickerValueChange), for: UIControl.Event.valueChanged)
     }
 }

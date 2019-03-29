@@ -42,7 +42,7 @@ struct Constants {
     
     struct Animations {
         static let keyboardDuration = 0.3
-        static let keyboardCurve = UIViewAnimationCurve.easeOut
+        static let keyboardCurve = UIView.AnimationCurve.easeOut
         static let keyboardDistanceToControl: CGFloat = 10
     }
 }
@@ -78,8 +78,8 @@ enum Status: String, Error {
             title = "Error"
         }
         
-        let alert = UIAlertController(title: title, message: self.rawValue, preferredStyle: UIAlertControllerStyle.alert)
-        let defaultAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil)
+        let alert = UIAlertController(title: title, message: self.rawValue, preferredStyle: UIAlertController.Style.alert)
+        let defaultAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil)
         alert.addAction(defaultAction)
         
         return alert
@@ -89,7 +89,7 @@ enum Status: String, Error {
 class App {
     
     static fileprivate(set) var version: String = {
-        let appPlist = Bundle.main.infoDictionary as [String: AnyObject]!
+        let appPlist = Bundle.main.infoDictionary as [String: AnyObject]?
         return appPlist!["CFBundleShortVersionString"] as! String
     }()
     

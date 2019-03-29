@@ -27,7 +27,7 @@ class ItemJournalViewController: UIViewController, UITableViewDelegate, UITableV
     
     var viewOffset: CGFloat = 0
     var keyboardAnimationDuration: Double = Constants.Animations.keyboardDuration
-    var keyboardAnimationCurve: UIViewAnimationCurve = Constants.Animations.keyboardCurve
+    var keyboardAnimationCurve: UIView.AnimationCurve = Constants.Animations.keyboardCurve
     
     var reorderTableView: LongPressReorderTableView!
     
@@ -36,7 +36,7 @@ class ItemJournalViewController: UIViewController, UITableViewDelegate, UITableV
         super.viewDidLoad()
 
         entriesTableView.estimatedRowHeight = 84
-        entriesTableView.rowHeight = UITableViewAutomaticDimension
+        entriesTableView.rowHeight = UITableView.automaticDimension
         
         title = item.name
         valueDate = Date()
@@ -105,7 +105,7 @@ class ItemJournalViewController: UIViewController, UITableViewDelegate, UITableV
             
             self.itemChangeDelegate?.itemChanged()
             self.entriesTableView.beginUpdates()
-            self.entriesTableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: UITableViewRowAnimation.right)
+            self.entriesTableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: UITableView.RowAnimation.right)
             self.entriesTableView.endUpdates()
         }
     }
@@ -127,11 +127,11 @@ class ItemJournalViewController: UIViewController, UITableViewDelegate, UITableV
     @IBAction func valueDateEditing(_ sender: UITextField) {
         let datePickerView: UIDatePicker = UIDatePicker()
         datePickerView.backgroundColor = UIColor.white
-        datePickerView.datePickerMode = UIDatePickerMode.date
+        datePickerView.datePickerMode = UIDatePicker.Mode.date
         datePickerView.date = valueDate
         
         sender.inputView = datePickerView
-        datePickerView.addTarget(self, action: #selector(self.datePickerValueChange), for: UIControlEvents.valueChanged)
+        datePickerView.addTarget(self, action: #selector(self.datePickerValueChange), for: UIControl.Event.valueChanged)
     }
 
     
@@ -159,8 +159,8 @@ class ItemJournalViewController: UIViewController, UITableViewDelegate, UITableV
         return true
     }
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if (editingStyle == UITableViewCellEditingStyle.delete) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if (editingStyle == UITableViewCell.EditingStyle.delete) {
             item.remove(atIndex: indexPath.row) { error in
                 if let error = error {
                     let alert = error.createErrorAlert()

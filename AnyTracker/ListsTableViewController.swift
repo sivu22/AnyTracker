@@ -9,7 +9,7 @@
 import UIKit
 
 extension UITableViewController {
-    func reloadRows(at indexes: [Int], in section: Int = 0, withAnimation animation: UITableViewRowAnimation = .automatic) {
+    func reloadRows(at indexes: [Int], in section: Int = 0, withAnimation animation: UITableView.RowAnimation = .automatic) {
         var indexArray = [] as [IndexPath]
         for index in indexes {
             let indexPath = IndexPath(row: index, section: section)
@@ -112,7 +112,7 @@ class ListsTableViewController: UITableViewController, NewListDelegate, ItemsDel
                     }
                     
                     tableView.beginUpdates()
-                    tableView.insertRows(at: [IndexPath(row: 1 + index, section: 0)], with: UITableViewRowAnimation.right)
+                    tableView.insertRows(at: [IndexPath(row: 1 + index, section: 0)], with: UITableView.RowAnimation.right)
                     tableView.endUpdates()
                 } else {
                     let alert = Status.errorFailedToAddList.createErrorAlert()
@@ -242,11 +242,11 @@ class ListsTableViewController: UITableViewController, NewListDelegate, ItemsDel
             }
             
             if app.lists!.cache?.lists[listIndex].numItems ?? 0 > 0 {
-                let alert = UIAlertController(title: "", message: "Are you sure you want to delete the list and its items?", preferredStyle: UIAlertControllerStyle.alert)
-                let yesAction = UIAlertAction(title: "Yes", style: UIAlertActionStyle.destructive, handler: { (action: UIAlertAction!) in
+                let alert = UIAlertController(title: "", message: "Are you sure you want to delete the list and its items?", preferredStyle: UIAlertController.Style.alert)
+                let yesAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.destructive, handler: { (action: UIAlertAction!) in
                     self.deleteList(atIndex: listIndex, withIndexPath: indexPath)
                 })
-                let noAction = UIAlertAction(title: "No", style: UIAlertActionStyle.cancel, handler: { (action: UIAlertAction!) in
+                let noAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel, handler: { (action: UIAlertAction!) in
                     self.tableView.setEditing(false, animated: true)
                 })
                 alert.addAction(yesAction)
@@ -262,7 +262,7 @@ class ListsTableViewController: UITableViewController, NewListDelegate, ItemsDel
     }
     
     // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
         } else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
@@ -296,7 +296,7 @@ class ListsTableViewController: UITableViewController, NewListDelegate, ItemsDel
         }
         
         if identifier == "toSettings" {
-            let vc = segue.destination.childViewControllers[0] as! SettingsTableViewController
+            let vc = segue.destination.children[0] as! SettingsTableViewController
             vc.injectApp(app)
             
             if !app.noContent {

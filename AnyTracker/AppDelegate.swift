@@ -14,14 +14,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var app: App!
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         app = App(noContent: true, numberSeparator: true, dateFormatLong: true, addNewListTop: false, addNewItemTop: false)
         app.appInit()
         
         if let window = window, let rvc = window.rootViewController {
-            if rvc.childViewControllers[0].isKind(of: ListsTableViewController.self) {
-                let vc = rvc.childViewControllers[0] as! ListsTableViewController
+            if rvc.children[0].isKind(of: ListsTableViewController.self) {
+                let vc = rvc.children[0] as! ListsTableViewController
                 vc.injectApp(app)
             }
         }

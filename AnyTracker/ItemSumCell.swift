@@ -113,8 +113,8 @@ class ItemSumCell: UITableViewCell, UITextFieldDelegate {
     
     @objc func negativePressed() {
         let valueText = valueTextField.text!
-        if valueText.characters.first == "-" {
-            valueTextField.text = String(valueText.characters.dropFirst())
+        if valueText.first == "-" {
+            valueTextField.text = String(valueText.dropFirst())
         } else {
             valueTextField.text = "-" + valueText
         }

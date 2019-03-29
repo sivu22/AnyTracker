@@ -81,8 +81,8 @@ class NewItemViewController: UIViewController {
                 typeControl.selectedSegmentIndex = 2
             }
             dateSwitch.isOn = item.useDate
-            startDate = item.startDate as Date!
-            endDate = item.endDate as Date!
+            startDate = item.startDate as Date?
+            endDate = item.endDate as Date?
             
             if dateSwitch.isOn {
                 startDateTextField.isEnabled = true
@@ -194,7 +194,7 @@ class NewItemViewController: UIViewController {
     }
 
     @IBAction func itemNameChanged(_ sender: UITextField) {
-        let count = nameTextField.text?.characters.count ?? 0
+        let count = nameTextField.text?.count ?? 0
         if count > 0 {
             createBarButton.isEnabled = true
         } else {
@@ -230,13 +230,13 @@ class NewItemViewController: UIViewController {
         
         let datePickerView: UIDatePicker = UIDatePicker()
         datePickerView.backgroundColor = UIColor.white
-        datePickerView.datePickerMode = UIDatePickerMode.date
+        datePickerView.datePickerMode = UIDatePicker.Mode.date
         datePickerView.minimumDate = minDate
         datePickerView.maximumDate = endDate
         datePickerView.date = startDate
         
         sender.inputView = datePickerView
-        datePickerView.addTarget(self, action: #selector(self.datePickerValueChange), for: UIControlEvents.valueChanged)
+        datePickerView.addTarget(self, action: #selector(self.datePickerValueChange), for: UIControl.Event.valueChanged)
     }
     
     @IBAction func endDateEditing(_ sender: UITextField) {
@@ -246,12 +246,12 @@ class NewItemViewController: UIViewController {
         
         let datePickerView: UIDatePicker = UIDatePicker()
         datePickerView.backgroundColor = UIColor.white
-        datePickerView.datePickerMode = UIDatePickerMode.date
+        datePickerView.datePickerMode = UIDatePicker.Mode.date
         datePickerView.minimumDate = startDate
         datePickerView.maximumDate = maxDate
         datePickerView.date = endDate
         
         sender.inputView = datePickerView
-        datePickerView.addTarget(self, action: #selector(self.datePickerValueChange), for: UIControlEvents.valueChanged)
+        datePickerView.addTarget(self, action: #selector(self.datePickerValueChange), for: UIControl.Event.valueChanged)
     }
 }

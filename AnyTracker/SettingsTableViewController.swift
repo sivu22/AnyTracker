@@ -90,8 +90,8 @@ class SettingsTableViewController: UITableViewController {
     @IBAction func clearContentPressed(_ sender: UIButton) {
         if let app = app {
             if let lists = app.lists {
-                let alert = UIAlertController(title: "Clear Content", message: "All lists and all items will be deleted. Are you sure you want to continue?", preferredStyle: UIAlertControllerStyle.alert)
-                let yesAction = UIAlertAction(title: "Yes", style: UIAlertActionStyle.destructive, handler: { (action: UIAlertAction!) in
+                let alert = UIAlertController(title: "Clear Content", message: "All lists and all items will be deleted. Are you sure you want to continue?", preferredStyle: UIAlertController.Style.alert)
+                let yesAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.destructive, handler: { (action: UIAlertAction!) in
                     Utils.debugLog("App content reset wanted")
                     
                     var success = true
@@ -112,7 +112,7 @@ class SettingsTableViewController: UITableViewController {
                         self.clearContentButton.isEnabled = false
                     }
                     })
-                let noAction = UIAlertAction(title: "No", style: UIAlertActionStyle.cancel, handler: nil)
+                let noAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel, handler: nil)
                 alert.addAction(yesAction)
                 alert.addAction(noAction)
                 present(alert, animated: true, completion: nil)

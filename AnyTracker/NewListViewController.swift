@@ -40,7 +40,7 @@ class NewListViewController: UIViewController, UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         
-        let count = textField.text?.characters.count ?? 0
+        let count = textField.text?.count ?? 0
         if count > 0 {
             if !editMode || textField.text! != listName {
                 delegate?.newListName(textField.text!, sender: self)

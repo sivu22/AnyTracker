@@ -27,7 +27,7 @@ protocol NotifyItemUpdate {
     var itemChangeDelegate: ItemChangeDelegate? { get set }
 }
 
-protocol Item: class, Version, NameAndID, ItemInit, ItemJSON {
+protocol Item: Version, NameAndID, ItemInit, ItemJSON {
     var name: String { get set }
     var ID: String { get set }
     

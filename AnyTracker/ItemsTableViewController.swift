@@ -46,7 +46,7 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
         tableView.tableFooterView = UIView(frame: CGRect.zero)
         
         tableView.estimatedRowHeight = 90
-        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.rowHeight = UITableView.automaticDimension
         
         alert = nil
         if listName == "all" {
@@ -130,7 +130,7 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
             }
             
             tableView.beginUpdates()
-            tableView.insertRows(at: [IndexPath(row: addItemIndex, section: 0)], with: UITableViewRowAnimation.right)
+            tableView.insertRows(at: [IndexPath(row: addItemIndex, section: 0)], with: UITableView.RowAnimation.right)
             tableView.endUpdates()
             
             // Not needed, should be a bool instead
@@ -235,7 +235,7 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
         
         let edit = UITableViewRowAction(style: .normal, title: "Edit") { action, index in
             let vcNav = self.storyboard!.instantiateViewController(withIdentifier: "NewItemNavigation") as! UINavigationController
-            let vc = vcNav.childViewControllers[0] as! NewItemViewController
+            let vc = vcNav.children[0] as! NewItemViewController
             vc.delegateEdit = self
             self.editItemIndex = itemIndex
             self.itemUpdated = false
@@ -252,11 +252,11 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
             let item = self.items[itemIndex]
             
             if !item.isEmpty() {
-                let alert = UIAlertController(title: "", message: "Are you sure you want to delete the item?", preferredStyle: UIAlertControllerStyle.alert)
-                let yesAction = UIAlertAction(title: "Yes", style: UIAlertActionStyle.destructive, handler: { (action: UIAlertAction!) in
+                let alert = UIAlertController(title: "", message: "Are you sure you want to delete the item?", preferredStyle: UIAlertController.Style.alert)
+                let yesAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.destructive, handler: { (action: UIAlertAction!) in
                     self.deleteItem(withIndexPath: indexPath)
                 })
-                let noAction = UIAlertAction(title: "No", style: UIAlertActionStyle.cancel, handler: { (action: UIAlertAction!) in
+                let noAction = UIAlertAction(title: "No", style: UIAlertAction.Style.cancel, handler: { (action: UIAlertAction!) in
                     self.tableView.setEditing(false, animated: true)
                 })
                 alert.addAction(yesAction)
@@ -272,7 +272,7 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
     }
     
     // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
         } else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
@@ -306,7 +306,7 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
         let itemIDIndex = (tableView.indexPathForSelectedRow as NSIndexPath?)?.row ?? 0
         
         if identifier == "toNewItem" {
-            let vc = segue.destination.childViewControllers[0] as! NewItemViewController
+            let vc = segue.destination.children[0] as! NewItemViewController
             vc.list = list!
             vc.longDateFormat = app?.dateFormatLong ?? true
             vc.insertItemAtFront = app?.addNewItemTop ?? false
@@ -316,21 +316,21 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
             vc.numberSeparator = app?.numberSeparator ?? true
             vc.itemChangeDelegate = self
             refreshItemIndex = itemIndex
-            vc.item = items[itemIDIndex] as! ItemSum
+            vc.item = items[itemIDIndex] as? ItemSum
         }
         else if identifier == "toCounterItem" {
             let vc = segue.destination as! ItemCounterViewController
             vc.numberSeparator = app?.numberSeparator ?? true
             vc.itemChangeDelegate = self
             refreshItemIndex = itemIndex
-            vc.item = items[itemIDIndex] as! ItemCounter
+            vc.item = items[itemIDIndex] as? ItemCounter
         }
         else if identifier == "toJournalItem" {
             let vc = segue.destination as! ItemJournalViewController
             vc.itemChangeDelegate = self
             vc.longDateFormat = app?.dateFormatLong ?? true
             refreshItemIndex = itemIndex
-            vc.item = items[itemIDIndex] as! ItemJournal
+            vc.item = items[itemIDIndex] as? ItemJournal
         }
     }
     

@@ -73,7 +73,7 @@ extension ItemOps {
     }
     
     static func loadItem(withID fileName:String) throws -> Item {
-        guard Utils.validString(fileName) && fileName.characters.count > 5 else {
+        guard Utils.validString(fileName) && fileName.count > 5 else {
             Utils.debugLog("Bad filename for item")
             throw Status.errorInputString
         }
@@ -83,7 +83,7 @@ extension ItemOps {
             throw Status.errorListFileLoad
         }
         
-        guard let type = ItemType.getType(fromIndex: fileName[fileName.characters.index(fileName.startIndex, offsetBy: 4)]) else {
+        guard let type = ItemType.getType(fromIndex: fileName[fileName.index(fileName.startIndex, offsetBy: 4)]) else {
             Utils.debugLog("Failed to get item type")
             throw Status.errorListFileLoad
         }
@@ -108,7 +108,7 @@ extension ItemOps {
     }
     
     static func getItemType(fromID ID: String) -> ItemType? {
-        let type = ItemType.getType(fromIndex: ID[ID.characters.index(ID.startIndex, offsetBy: 4)])
+        let type = ItemType.getType(fromIndex: ID[ID.index(ID.startIndex, offsetBy: 4)])
         
         return type
     }

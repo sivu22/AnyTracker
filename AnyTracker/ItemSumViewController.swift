@@ -27,7 +27,7 @@ class ItemSumViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     var viewOffset: CGFloat = 0
     var keyboardAnimationDuration: Double = Constants.Animations.keyboardDuration
-    var keyboardAnimationCurve: UIViewAnimationCurve = Constants.Animations.keyboardCurve
+    var keyboardAnimationCurve: UIView.AnimationCurve = Constants.Animations.keyboardCurve
     
     var reorderTableView: LongPressReorderTableView!
     
@@ -107,7 +107,7 @@ class ItemSumViewController: UIViewController, UITableViewDelegate, UITableViewD
             
             self.sumLabel.text = self.item.sum.asString(withSeparator: self.numberSeparator)
             self.elementsTableView.beginUpdates()
-            self.elementsTableView.insertRows(at: [IndexPath(row: self.item.elements.count - 1, section: 0)], with: UITableViewRowAnimation.right)
+            self.elementsTableView.insertRows(at: [IndexPath(row: self.item.elements.count - 1, section: 0)], with: UITableView.RowAnimation.right)
             self.elementsTableView.endUpdates()
         }
     }
@@ -128,8 +128,8 @@ class ItemSumViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     @objc func negativePressed() {
         let valueText = valueTextField.text!
-        if valueText.characters.first == "-" {
-            valueTextField.text = String(valueText.characters.dropFirst())
+        if valueText.first == "-" {
+            valueTextField.text = String(valueText.dropFirst())
         } else {
             valueTextField.text = "-" + valueText
         }
@@ -159,8 +159,8 @@ class ItemSumViewController: UIViewController, UITableViewDelegate, UITableViewD
         return true
     }
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if (editingStyle == UITableViewCellEditingStyle.delete) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if (editingStyle == UITableViewCell.EditingStyle.delete) {
             item.remove(atIndex: indexPath.row) { error in
                 if let error = error {
                     let alert = error.createErrorAlert()

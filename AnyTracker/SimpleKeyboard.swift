@@ -26,7 +26,7 @@ class SimpleKeyboard: NSObject {
     
     fileprivate var viewOffset: CGFloat = 0
     fileprivate var keyboardAnimationDuration: Double = Constants.Animations.keyboardDuration
-    fileprivate var keyboardAnimationCurve: UIViewAnimationCurve = Constants.Animations.keyboardCurve
+    fileprivate var keyboardAnimationCurve: UIView.AnimationCurve = Constants.Animations.keyboardCurve
     
     // MARK: - UITextField callbacks
     
@@ -94,8 +94,8 @@ class SimpleKeyboard: NSObject {
     }
     
     func enable() {
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     func disable() {
@@ -170,7 +170,7 @@ extension SimpleKeyboard {
     
     @objc func keyboardWillShow(_ notification: NSNotification) {
         var keyboardHeight: CGFloat = 0
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             keyboardHeight = keyboardSize.height
         }
         
@@ -181,8 +181,8 @@ extension SimpleKeyboard {
             return
         }
         
-        keyboardAnimationDuration = (notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? Constants.Animations.keyboardDuration
-        keyboardAnimationCurve = UIViewAnimationCurve(rawValue: (notification.userInfo?[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber)?.intValue ?? Constants.Animations.keyboardCurve.rawValue)!
+        keyboardAnimationDuration = (notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? Constants.Animations.keyboardDuration
+        keyboardAnimationCurve = UIView.AnimationCurve(rawValue: (notification.userInfo?[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber)?.intValue ?? Constants.Animations.keyboardCurve.rawValue)!
         
         guard activeView != nil else {
             return
