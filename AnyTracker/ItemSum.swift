@@ -137,7 +137,7 @@ class ItemSum: Item, ItemTypeSum {
             return
         }
         
-        swap(&elements[src], &elements[dst])
+        elements.swapAt(src, dst)
     }
     
     // MARK: -

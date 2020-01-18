@@ -212,7 +212,7 @@ class Lists {
             return
         }
         
-        swap(&listsData[src], &listsData[dst])
+        listsData.swapAt(src, dst)
         swapCache(atIndex: src, withIndex: dst)
     }
     
@@ -386,6 +386,6 @@ private extension Lists {
             return
         }
         
-        swap(&cache!.lists[src], &cache!.lists[dst])
+        cache!.lists.swapAt(src, dst)
     }
 }

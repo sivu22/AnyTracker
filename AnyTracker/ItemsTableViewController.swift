@@ -365,7 +365,7 @@ extension ItemsTableViewController {
     
     override func positionChanged(currentIndex: IndexPath, newIndex: IndexPath) {
         list!.exchangeItem(fromIndex: currentIndex.row, toIndex: newIndex.row)
-        swap(&items[currentIndex.row], &items[newIndex.row])
+        items.swapAt(currentIndex.row, newIndex.row)
     }
     
     override func reorderFinished(initialIndex: IndexPath, finalIndex: IndexPath) {

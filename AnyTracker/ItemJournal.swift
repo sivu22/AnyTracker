@@ -129,7 +129,7 @@ class ItemJournal: Item, ItemTypeJournal {
             return
         }
         
-        swap(&entries[src], &entries[dst])
+        entries.swapAt(src, dst)
     }
     
     // MARK: -

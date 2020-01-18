@@ -167,7 +167,7 @@ class List: Version, NameAndID {
             return
         }
         
-        swap(&items[src], &items[dst])
+        items.swapAt(src, dst)
     }
     
     // MARK: -
