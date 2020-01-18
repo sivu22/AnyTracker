@@ -63,12 +63,6 @@ class NewItemViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Color the segmented control
-        let views = typeControl.subviews
-        views[ItemType.numberOfItems() - 1 - ItemType.sum.getTypeIndex()].tintColor = Constants.Colors.ItemSum
-        views[ItemType.numberOfItems() - 1 - ItemType.counter.getTypeIndex()].tintColor = Constants.Colors.ItemCounter
-        views[ItemType.numberOfItems() - 1 - ItemType.journal.getTypeIndex()].tintColor = Constants.Colors.ItemJournal
-        
         if let item = editItem {
             createBarButton.isEnabled = true
             typeControl.isEnabled = false
@@ -95,6 +89,21 @@ class NewItemViewController: UIViewController {
             endDate = (Calendar.current as NSCalendar).date(byAdding: dateComponents, to: startDate, options: [])
             
             //nameTextField.becomeFirstResponder()
+        }
+        
+        if #available(iOS 13.0, *) {
+            typeControl.selectedSegmentTintColor = Constants.Colors.ItemSum
+            if typeControl.selectedSegmentIndex == 1 {
+                typeControl.selectedSegmentTintColor = Constants.Colors.ItemCounter
+            } else if typeControl.selectedSegmentIndex == 2 {
+                typeControl.selectedSegmentTintColor = Constants.Colors.ItemJournal
+            }
+        } else {
+            // Color the segmented control
+            let views = typeControl.subviews
+            views[ItemType.numberOfItems() - 1 - ItemType.sum.getTypeIndex()].tintColor = Constants.Colors.ItemSum
+            views[ItemType.numberOfItems() - 1 - ItemType.counter.getTypeIndex()].tintColor = Constants.Colors.ItemCounter
+            views[ItemType.numberOfItems() - 1 - ItemType.journal.getTypeIndex()].tintColor = Constants.Colors.ItemJournal
         }
         
         startDateTextField.text = Utils.stringFrom(date: startDate, startDate: true, longFormat: longDateFormat)
@@ -143,6 +152,17 @@ class NewItemViewController: UIViewController {
     }
     
     // MARK: - Actions
+    
+    @IBAction func typeChanged(_ sender: UISegmentedControl) {
+        if #available(iOS 13.0, *) {
+            typeControl.selectedSegmentTintColor = Constants.Colors.ItemSum
+            if typeControl.selectedSegmentIndex == 1 {
+                typeControl.selectedSegmentTintColor = Constants.Colors.ItemCounter
+            } else if typeControl.selectedSegmentIndex == 2 {
+                typeControl.selectedSegmentTintColor = Constants.Colors.ItemJournal
+            }
+        }
+    }
     
     @IBAction func createItemPressed(_ sender: AnyObject) {
         if let item = editItem {
