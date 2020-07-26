@@ -29,10 +29,8 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
     
     fileprivate var addItem: Item? = nil
     fileprivate var addItemIndex: Int = 0
-    fileprivate var itemUpdated: Bool = false
     fileprivate var editItemIndex: Int = -1
     
-    fileprivate var refreshItem: Bool = false
     fileprivate var refreshItemIndex: Int = -1
     
     var numItems: Int = -1
@@ -117,38 +115,6 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        if addItem != nil && addItemIndex > -1 {
-            // Item is already added to list and written on disk
-            numItems += 1
-            delegate?.numItemsChange(increased: true)
-            
-            if addItemIndex == 0 {
-                items.insert(addItem!, at: 0)
-            } else {
-                items.append(addItem!)
-            }
-            
-            tableView.beginUpdates()
-            tableView.insertRows(at: [IndexPath(row: addItemIndex, section: 0)], with: UITableView.RowAnimation.right)
-            tableView.endUpdates()
-            
-            // Not needed, should be a bool instead
-            addItem = nil
-        } else if editItemIndex > -1 {
-            let itemIndex = editItemIndex
-            editItemIndex = -1
-            
-            if itemUpdated {
-                reloadRows(at: [itemIndex])
-            }
-        } else if refreshItem {
-            refreshItem = false
-            
-            if refreshItemIndex > -1 {
-                reloadRows(at: [refreshItemIndex])
-            }
-        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -238,7 +204,6 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
             let vc = vcNav.children[0] as! NewItemViewController
             vc.delegateEdit = self
             self.editItemIndex = itemIndex
-            self.itemUpdated = false
             vc.longDateFormat = self.app?.dateFormatLong ?? true
             vc.editItem = self.items[itemIndex]
             
@@ -348,14 +313,38 @@ class ItemsTableViewController: UITableViewController, NewItemDelegate, EditItem
     func newItem(_ item : Item, atIndex index: Int, sender: NewItemViewController) {
         addItem = item
         addItemIndex = index
+        
+        if addItem != nil && addItemIndex > -1 {
+            // Item is already added to list and written on disk
+            numItems += 1
+            delegate?.numItemsChange(increased: true)
+            
+            if addItemIndex == 0 {
+                items.insert(addItem!, at: 0)
+            } else {
+                items.append(addItem!)
+            }
+            
+            tableView.beginUpdates()
+            tableView.insertRows(at: [IndexPath(row: addItemIndex, section: 0)], with: UITableView.RowAnimation.right)
+            tableView.endUpdates()
+            
+            // Not needed, should be a bool instead
+            addItem = nil
+        }
     }
     
     func updateItem(fromSender sender: NewItemViewController) {
-        itemUpdated = true
+        let itemIndex = editItemIndex
+        editItemIndex = -1
+        
+        reloadRows(at: [itemIndex])
     }
     
     func itemChanged() {
-        refreshItem = true
+        if refreshItemIndex > -1 {
+            reloadRows(at: [refreshItemIndex])
+        }
     }
 }
 

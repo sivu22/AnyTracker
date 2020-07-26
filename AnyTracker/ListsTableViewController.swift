@@ -82,62 +82,8 @@ class ListsTableViewController: UITableViewController, NewListDelegate, ItemsDel
             present(alert, animated: true, completion: nil)
         }
         
-        // Back from adding or editing a list
-        if Utils.validString(addListName) {
-            let newListName = addListName
-            addListName = ""
-            
-            if editListIndex == -1 {
-                if app.lists == nil {
-                    app.lists = Lists()
-                }
-                
-                var index = -1
-                do {
-                    index = try app.lists!.insertList(withName: newListName, atFront: app.addNewListTop)
-                    try app.lists!.saveListsToFile()
-                } catch let error as Status {
-                    let alert = error.createErrorAlert()
-                    present(alert, animated: true, completion: nil)
-                    return
-                } catch {
-                    let alert = Status.errorDefault.createErrorAlert()
-                    present(alert, animated: true, completion: nil)
-                    return
-                }
-                
-                if index >= 0 {
-                    if app.noContent {
-                        app.toggleNoContent()
-                    }
-                    
-                    tableView.beginUpdates()
-                    tableView.insertRows(at: [IndexPath(row: 1 + index, section: 0)], with: UITableView.RowAnimation.right)
-                    tableView.endUpdates()
-                } else {
-                    let alert = Status.errorFailedToAddList.createErrorAlert()
-                    present(alert, animated: true, completion: nil)
-                }
-            } else {
-                let listIndex = editListIndex
-                editListIndex = -1
-                
-                do {
-                    try app.lists!.updateList(atIndex: listIndex, withNewName: newListName)
-                } catch let error as Status {
-                    let alert = error.createErrorAlert()
-                    present(alert, animated: true, completion: nil)
-                    return
-                } catch {
-                    let alert = Status.errorDefault.createErrorAlert()
-                    present(alert, animated: true, completion: nil)
-                    return
-                }
-                
-                 reloadRows(at: [listIndex + 1])
-            }
         // Back from Items
-        } else if let listIndex = selectedListIndex {
+        if let listIndex = selectedListIndex {
             selectedListIndex = nil
             
             if currentListNumItems - app.lists!.getListNumItems(atIndex: listIndex) != 0 {
@@ -145,10 +91,6 @@ class ListsTableViewController: UITableViewController, NewListDelegate, ItemsDel
                 
                 reloadRows(at: [listIndex + 1, 0])
             }
-        // Back from Settings
-        } else if mayNeedRefresh && app.noContent {
-            // Cache will properly be empty
-            self.tableView.reloadData()
         }
     }
     
@@ -328,6 +270,65 @@ class ListsTableViewController: UITableViewController, NewListDelegate, ItemsDel
     
     func newListName(_ name: String, sender: NewListViewController) {
         addListName = name
+        
+        guard let app = app else {
+            return
+        }
+        
+        if Utils.validString(addListName) {
+            let newListName = addListName
+            addListName = ""
+            
+            if editListIndex == -1 {
+                if app.lists == nil {
+                    app.lists = Lists()
+                }
+                
+                var index = -1
+                do {
+                    index = try app.lists!.insertList(withName: newListName, atFront: app.addNewListTop)
+                    try app.lists!.saveListsToFile()
+                } catch let error as Status {
+                    let alert = error.createErrorAlert()
+                    present(alert, animated: true, completion: nil)
+                    return
+                } catch {
+                    let alert = Status.errorDefault.createErrorAlert()
+                    present(alert, animated: true, completion: nil)
+                    return
+                }
+                
+                if index >= 0 {
+                    if app.noContent {
+                        app.toggleNoContent()
+                    }
+                    
+                    tableView.beginUpdates()
+                    tableView.insertRows(at: [IndexPath(row: 1 + index, section: 0)], with: UITableView.RowAnimation.right)
+                    tableView.endUpdates()
+                } else {
+                    let alert = Status.errorFailedToAddList.createErrorAlert()
+                    present(alert, animated: true, completion: nil)
+                }
+            } else {
+                let listIndex = editListIndex
+                editListIndex = -1
+                
+                do {
+                    try app.lists!.updateList(atIndex: listIndex, withNewName: newListName)
+                } catch let error as Status {
+                    let alert = error.createErrorAlert()
+                    present(alert, animated: true, completion: nil)
+                    return
+                } catch {
+                    let alert = Status.errorDefault.createErrorAlert()
+                    present(alert, animated: true, completion: nil)
+                    return
+                }
+                
+                 reloadRows(at: [listIndex + 1])
+            }
+        }
     }
     
     func numItemsChange(increased increase: Bool) {
@@ -346,6 +347,15 @@ class ListsTableViewController: UITableViewController, NewListDelegate, ItemsDel
         let srcVC = segue.source
         if let vc = srcVC as? NewListViewController {
             vc.prepareForDismissingController()
+        } else if let _ = srcVC as? SettingsTableViewController {
+            guard let app = app else {
+                return
+            }
+            
+            if mayNeedRefresh && app.noContent {
+                // Cache will properly be empty
+                self.tableView.reloadData()
+            }
         }
     }
 }
