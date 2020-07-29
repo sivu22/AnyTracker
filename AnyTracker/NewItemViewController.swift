@@ -249,7 +249,11 @@ class NewItemViewController: UIViewController {
         let (minDate, _) = minMaxDate
         
         let datePickerView: UIDatePicker = UIDatePicker()
-        datePickerView.backgroundColor = UIColor.white
+        if #available(iOS 13.0, *) {
+            datePickerView.backgroundColor = UIColor.systemBackground
+        } else {
+            datePickerView.backgroundColor = UIColor.white
+        }
         datePickerView.datePickerMode = UIDatePicker.Mode.date
         datePickerView.minimumDate = minDate
         datePickerView.maximumDate = endDate
@@ -265,7 +269,11 @@ class NewItemViewController: UIViewController {
         let (_, maxDate) = minMaxDate
         
         let datePickerView: UIDatePicker = UIDatePicker()
-        datePickerView.backgroundColor = UIColor.white
+        if #available(iOS 13.0, *) {
+            datePickerView.backgroundColor = UIColor.systemBackground
+        } else {
+            datePickerView.backgroundColor = UIColor.white
+        }
         datePickerView.datePickerMode = UIDatePicker.Mode.date
         datePickerView.minimumDate = startDate
         datePickerView.maximumDate = maxDate
