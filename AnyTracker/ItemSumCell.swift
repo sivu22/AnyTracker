@@ -52,13 +52,15 @@ class ItemSumCell: UITableViewCell, UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         
-        item.updateElement(atIndex: elementIndex, newName: textField.text!, newValue: item.elements[elementIndex].value) { error in
-            if let error = error {
-                let alert = error.createErrorAlert()
-                self.viewController?.present(alert, animated: true, completion: nil)
-            } /*else {
-                Utils.debugLog("Successfully updated element of Sum item \(self.item.ID)")
-            }*/
+        if textField != valueTextField {
+            item.updateElement(atIndex: elementIndex, newName: textField.text!, newValue: item.elements[elementIndex].value) { error in
+                if let error = error {
+                    let alert = error.createErrorAlert()
+                    self.viewController?.present(alert, animated: true, completion: nil)
+                } /*else {
+                    Utils.debugLog("Successfully updated element of Sum item \(self.item.ID)")
+                }*/
+            }
         }
         
         return true
